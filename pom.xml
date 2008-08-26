@@ -44,6 +44,11 @@
       <optional>true</optional>
     </dependency>
     <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-stax-api_1.0_spec</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+    <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.1</version>
@@ -123,7 +128,7 @@
     <dependency>
       <groupId>tranql</groupId>
       <artifactId>tranql-connector</artifactId>
-      <version>1.1</version>
+      <version>1.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
