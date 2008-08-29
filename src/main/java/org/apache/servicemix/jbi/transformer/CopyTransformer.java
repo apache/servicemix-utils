@@ -31,6 +31,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.xml.sax.SAXException;
 
+import org.apache.servicemix.jbi.helper.MessageUtil;
 import org.apache.servicemix.jbi.jaxp.BytesSource;
 import org.apache.servicemix.jbi.jaxp.ResourceSource;
 import org.apache.servicemix.jbi.jaxp.SourceTransformer;
@@ -48,11 +49,25 @@ public class CopyTransformer implements MessageTransformer {
 
     private SourceTransformer sourceTransformer = new SourceTransformer();
 
-    private boolean copyProperties = true;
+    private boolean copyProperties;
 
-    private boolean copyAttachments = true;
+    private boolean copyAttachments;
 
-    private boolean copySecuritySubject = true;
+    private boolean copySecuritySubject;
+
+    private boolean copyContent;
+
+    public CopyTransformer() {
+        this(true, true, true, true);
+    }
+    
+    public CopyTransformer(boolean copySecuritySubject, boolean copyContent, boolean copyProperties, boolean copyAttachments) {
+        super();
+        this.copySecuritySubject = copySecuritySubject;
+        this.copyContent = copyContent;
+        this.copyProperties = copyProperties;
+        this.copyAttachments = copyAttachments;
+    }
 
     /**
      * @return the copyAttachments
@@ -111,6 +126,22 @@ public class CopyTransformer implements MessageTransformer {
             copyProperties(from, to);
         }
 
+        if (copyContent) {
+            copyContent(from, to);
+        }
+
+        if (copyAttachments) {
+            copyAttachments(from, to);
+        }
+
+        if (copySecuritySubject) {
+            copySecuritySubject(from, to);
+        }
+
+        return true;
+    }
+
+    private void copyContent(NormalizedMessage from, NormalizedMessage to) throws MessagingException {
         Source content = from.getContent();
         if ((content instanceof StreamSource || content instanceof SAXSource)
                 && !(content instanceof StringSource)
@@ -130,16 +161,13 @@ public class CopyTransformer implements MessageTransformer {
             }
         }
         to.setContent(content);
-
-        if (copyAttachments) {
-            copyAttachments(from, to);
-        }
-
-        if (copySecuritySubject) {
-            copySecuritySubject(from, to);
-        }
-
-        return true;
+    }
+    
+    public NormalizedMessage transform(MessageExchange exchange, NormalizedMessage in)
+        throws MessagingException {
+        NormalizedMessage out = new MessageUtil.NormalizedMessageImpl();
+        transform(exchange, in, out);
+        return out;
     }
 
     /**

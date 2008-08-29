@@ -34,4 +34,14 @@ public interface MessageTransformer {
      * @param out an empty out message ready to contain the result of the transformation
      */
     boolean transform(MessageExchange exchange, NormalizedMessage in, NormalizedMessage out) throws MessagingException;
+
+    /**
+     * Transforms an input message into the returned output message
+     * 
+     * @param exchange the exchange fon which the messages are flowing
+     * @param in the input message
+     * @return the output message or <code>null</code> if the output message co 
+     * @throws MessagingException when an error occurs while transforming the message
+     */
+    NormalizedMessage transform(MessageExchange exchange, NormalizedMessage in) throws MessagingException;
 }
