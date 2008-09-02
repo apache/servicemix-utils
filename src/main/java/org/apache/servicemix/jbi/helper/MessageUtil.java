@@ -34,6 +34,7 @@ import javax.security.auth.Subject;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.xml.sax.SAXException;
@@ -139,7 +140,8 @@ public final class MessageUtil {
      * @throws MessagingException
      */
     public static void enableContentRereadability(NormalizedMessage message) throws MessagingException {
-        if (message.getContent() instanceof StreamSource) {
+        if (message.getContent() instanceof StreamSource
+                || message.getContent() instanceof SAXSource) {
             try {
                 String content = new SourceTransformer().contentToString(message);
                 if (content != null) {
