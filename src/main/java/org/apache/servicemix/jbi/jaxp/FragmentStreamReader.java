@@ -41,9 +41,9 @@ public class FragmentStreamReader extends StreamReaderDelegate implements XMLStr
 
     public FragmentStreamReader(XMLStreamReader parent) {
         super(parent);
-        rootPrefixes = new ArrayList();
         NamespaceContext ctx = getParent().getNamespaceContext();
         if (ctx instanceof ExtendedNamespaceContext) {
+            rootPrefixes = new ArrayList();
             Iterator it = ((ExtendedNamespaceContext) ctx).getPrefixes();
             while (it.hasNext()) {
                 String prefix = (String) it.next();
@@ -111,7 +111,7 @@ public class FragmentStreamReader extends StreamReaderDelegate implements XMLStr
     }
 
     public int getNamespaceCount() {
-        if (state == STATE_FIRST_RUN) {
+        if (state == STATE_FIRST_RUN && rootPrefixes != null) {
             return rootPrefixes.size();
         } else {
             return getParent().getNamespaceCount();
@@ -119,7 +119,7 @@ public class FragmentStreamReader extends StreamReaderDelegate implements XMLStr
     }
 
     public String getNamespacePrefix(int i) {
-        if (state == STATE_FIRST_RUN) {
+        if (state == STATE_FIRST_RUN && rootPrefixes != null) {
             return (String) rootPrefixes.get(i);
         } else {
             return getParent().getNamespacePrefix(i);
@@ -127,7 +127,7 @@ public class FragmentStreamReader extends StreamReaderDelegate implements XMLStr
     }
 
     public String getNamespaceURI(int i) {
-        if (state == STATE_FIRST_RUN) {
+        if (state == STATE_FIRST_RUN && rootPrefixes != null) {
             return getParent().getNamespaceContext().getNamespaceURI((String) rootPrefixes.get(i));
         } else {
             return getParent().getNamespaceURI(i);
@@ -135,7 +135,7 @@ public class FragmentStreamReader extends StreamReaderDelegate implements XMLStr
     }
 
     public String getNamespaceURI(String prefix) {
-        if (state == STATE_FIRST_RUN) {
+        if (state == STATE_FIRST_RUN && rootPrefixes != null) {
             return getParent().getNamespaceContext().getNamespaceURI(prefix);
         } else {
             return getParent().getNamespaceURI(prefix);
