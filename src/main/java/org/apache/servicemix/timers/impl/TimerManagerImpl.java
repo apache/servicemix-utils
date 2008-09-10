@@ -31,30 +31,39 @@ public class TimerManagerImpl implements TimerManager {
 
     private java.util.Timer timer;
 
-    public Timer schedule(TimerListener listener, long delay) {
+    public synchronized Timer schedule(TimerListener listener, long delay) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Schedule timer " + listener + " for " + delay);
         }
         TimerImpl tt = new TimerImpl(listener);
+        if (timer == null) {
+            timer = new java.util.Timer();
+        }
         timer.schedule(tt, delay);
         return tt;
     }
 
-    public Timer schedule(TimerListener listener, Date date) {
+    public synchronized Timer schedule(TimerListener listener, Date date) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Schedule timer " + listener + " at " + date);
         }
         TimerImpl tt = new TimerImpl(listener);
+        if (timer == null) {
+            timer = new java.util.Timer();
+        }
         timer.schedule(tt, date);
         return tt;
     }
 
     public void start() {
-        timer = new java.util.Timer();
+        // for later usage
     }
 
-    public void stop() {
-        timer.cancel();
+    public synchronized void stop() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
     }
 
     protected static class TimerImpl extends TimerTask implements Timer {
