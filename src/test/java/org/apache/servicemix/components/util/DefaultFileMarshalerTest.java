@@ -18,6 +18,8 @@ package org.apache.servicemix.components.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 import javax.jbi.messaging.MessageExchange;
@@ -35,10 +37,24 @@ import org.apache.servicemix.tck.mock.MockNormalizedMessage;
  */
 public class DefaultFileMarshalerTest extends TestCase {
     
-    private static final String MESSAGE = "<test>l'élève est à l'école</test>";
+    private static final String MESSAGE;
     private static final SourceTransformer TRANSFORMER = new SourceTransformer();
     private DefaultFileMarshaler marshaler = new DefaultFileMarshaler();
-    
+
+    static {
+        String txt = "";
+        try {
+            InputStream is = DefaultFileMarshalerTest.class.getResourceAsStream("encoding.xml");
+            InputStreamReader r = new InputStreamReader(is, "UTF-8");
+            char[] buf = new char[8192];
+            int nb = r.read(buf);
+            txt = new String(buf, 0, nb);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        MESSAGE = txt.substring(txt.indexOf("<test")).trim();
+    }
+
     public void testReadExplicitEncoding() throws Exception {
         //create a mock exchange
         MessageExchange exchange = createMockExchange();
