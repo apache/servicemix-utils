@@ -34,6 +34,7 @@
   <description>Various utility/helper classes and services for the ServiceMix containers and components</description>
 
   <properties>
+      <servicemix.legal.version>1.0</servicemix.legal.version>
   </properties>
 
   <dependencies>
@@ -195,7 +196,145 @@
           </instructions>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.0-beta-7</version>
+        <configuration>
+          <useReleaseProfile>false</useReleaseProfile>
+          <preparationGoals>clean verify install</preparationGoals>
+          <goals>deploy</goals>
+          <arguments>-Prelease,deploy</arguments>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
+      </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.0</version>
+            <executions>
+                <execution>
+                    <id>copy-legal</id>
+                    <phase>generate-resources</phase>
+                    <goals>
+                        <goal>copy</goal>
+                    </goals>
+                    <configuration>
+                        <artifactItems>
+                            <artifactItem>
+                                <groupId>org.apache.servicemix.legal</groupId>
+                                <artifactId>legal</artifactId>
+						          <version>${servicemix.legal.version}</version>
+                                <type>xml</type>
+                                <outputDirectory>target/legal/</outputDirectory>
+                            </artifactItem>
+                        </artifactItems>
+                        <stripVersion>true</stripVersion>
+                    </configuration>
+                </execution>
+	          </executions>
+            <dependencies>                  
+                <dependency>
+                     <groupId>org.apache.servicemix.legal</groupId>
+                     <artifactId>legal</artifactId>
+                     <version>${servicemix.legal.version}</version>
+                     <type>xml</type>
+                </dependency>
+            </dependencies>
+	      </plugin>
+        <plugin>
+            <artifactId>maven-remote-resources-plugin</artifactId>
+            <version>1.0</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>process</goal>
+                    </goals>
+                    <configuration>
+                        <resourceBundles>
+                            <resourceBundle>org.apache:apache-jar-resource-bundle:1.4</resourceBundle>
+                        </resourceBundles>
+                        <supplementalModels>
+                            <supplementalModel>target/legal/legal.xml</supplementalModel>
+                        </supplementalModels>
+                        <properties>
+                            <addLicense>true</addLicense>
+                            <addArtifact>true</addArtifact>
+                            <projectName>Apache ServiceMix</projectName>
+                        </properties>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
     </plugins>
   </build>
 
+  <profiles>
+      <profile>
+          <id>release</id>
+          <build>
+              <plugins>
+                  <!-- We want to deploy the artifact to a staging location for perusal -->
+                  <plugin>
+                      <inherited>true</inherited>
+                      <artifactId>maven-deploy-plugin</artifactId>
+                      <version>2.3</version>
+                      <configuration>
+                          <altDeploymentRepository>${deploy.altRepository}</altDeploymentRepository>
+                          <updateReleaseInfo>true</updateReleaseInfo>
+                      </configuration>
+                  </plugin>
+                  <!-- We want to sign the artifact, the POM, and all attached artifacts -->
+                  <plugin>
+                      <artifactId>maven-gpg-plugin</artifactId>
+                      <version>1.0-alpha-4</version>
+                      <executions>
+                          <execution>
+                              <goals>
+                                  <goal>sign</goal>
+                              </goals>
+                          </execution>
+                      </executions>
+                  </plugin>
+              </plugins>
+          </build>
+      </profile>
+      <profile>
+          <id>deploy</id>
+          <build>
+              <defaultGoal>deploy</defaultGoal>
+              <plugins>
+                  <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                      <artifactId>maven-source-plugin</artifactId>
+                      <version>2.0.4</version>
+                      <executions>
+                          <execution>
+                              <id>attach-sources</id>
+                              <goals>
+                                  <goal>jar</goal>
+                              </goals>
+                          </execution>
+                      </executions>
+                  </plugin>
+                  <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                      <artifactId>maven-javadoc-plugin</artifactId>
+                      <version>2.4</version>
+                      <configuration>
+                          <source>1.5</source>
+                      </configuration>
+                      <executions>
+                          <execution>
+                              <id>attach-javadocs</id>
+                              <goals>
+                                  <goal>jar</goal>
+                              </goals>
+                          </execution>
+                      </executions>
+                  </plugin>
+              </plugins>
+          </build>
+      </profile>
+  </profiles>
 </project>
