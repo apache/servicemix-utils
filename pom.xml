@@ -37,6 +37,12 @@
       <servicemix.legal.version>1.0</servicemix.legal.version>
   </properties>
 
+  <scm>
+      <connection>scm:svn:http://svn.apache.org/repos/asf/servicemix/utils/trunk</connection>
+      <developerConnection>scm:svn:https://svn.apache.org/repos/asf/servicemix/utils/trunk</developerConnection>
+      <url>http://svn.apache.org/viewvc/servicemix/smx4/specs/utils/trunk</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
