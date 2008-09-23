@@ -275,6 +275,16 @@
     </plugins>
   </build>
 
+  <repositories>
+    <!-- repository for JAXB implementation -->
+    <repository>
+      <id>java.net</id>
+      <name>java.net Maven Repository</name>
+      <url>https://maven-repository.dev.java.net/nonav/repository</url>
+      <layout>legacy</layout>
+    </repository>
+  </repositories>
+
   <profiles>
       <profile>
           <id>release</id>
