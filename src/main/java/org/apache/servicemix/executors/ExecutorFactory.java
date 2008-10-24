@@ -32,5 +32,16 @@ public interface ExecutorFactory {
      * @return a configured Executor
      */
     Executor createExecutor(String id);
+
+    /**
+     * Create a new daemon executor for the given Id.
+     * The excutor should use daemon thread underlying
+     * The id may be used to provide per executor
+     * configuration.
+     *
+     * @param id the id of the executor to create
+     * @return a configured Executor
+     */
+    Executor createDaemonExecutor(String id);
     
 }

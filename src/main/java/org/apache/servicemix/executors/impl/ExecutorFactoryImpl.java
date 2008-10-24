@@ -58,6 +58,13 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
         return new ExecutorImpl(createService(id, config), config.getShutdownDelay());
     }
 
+    public Executor createDaemonExecutor(String id) {
+
+        ExecutorConfig config = getConfig(id);
+        config.setThreadDaemon(true);
+        return new ExecutorImpl(createService(id, config), config.getShutdownDelay());
+    }
+
     protected ExecutorConfig getConfig(String id) {
         ExecutorConfig config = null;
         if (configs != null) {
