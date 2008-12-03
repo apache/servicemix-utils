@@ -28,7 +28,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.DomReader;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.Log4JLogger;
+import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -37,7 +37,7 @@ import org.apache.commons.logging.impl.Log4JLogger;
  */
 public class JAXPXPathXStreamExpression extends JAXPXPathExpression {
 
-    protected Log logger = new Log4JLogger(JAXPXPathXStreamExpression.class.getName());
+    protected Log logger = LogFactory.getLog(JAXPXPathXStreamExpression.class);
     private XStream xStream;
 
     public JAXPXPathXStreamExpression() {
