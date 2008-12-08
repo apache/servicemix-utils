@@ -313,5 +313,36 @@ public final class FileUtil {
         }
     }
     
-    
+    /**
+     * checks whether a file is fully transmitted or still being copied
+     * 
+     * @param path      the full file path
+     * @returns         true if the file size didn't change for 100 millis 
+     */
+    public static boolean isFileFullyAvailable(String path) {
+        return isFileFullyAvailable(new File(path));
+    }
+
+    /**
+     * checks whether a file is fully transmitted or still being copied
+     * 
+     * @param file      the file to check
+     * @returns         true if the file size didn't change for 100 millis 
+     */
+    public static boolean isFileFullyAvailable(File file) {
+        // First check to see if the file is still growing
+        long targetLength = file.length();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            //Do nothing
+        }
+        long target2Length = file.length();
+
+        if (targetLength != target2Length) {
+            return false;
+        }
+        
+        return true;
+    }
 }
