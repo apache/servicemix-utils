@@ -27,5 +27,4 @@ public interface Container {
      * @return the factory
      */
     ClientFactory getClientFactory();
-    ComponentUtil getComponentByName(String name);
 }
