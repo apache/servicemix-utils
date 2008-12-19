@@ -15,17 +15,17 @@
  * limitations under the License.
  */
 package org.apache.servicemix.jbi.api;
+import javax.jbi.component.Component;
 
 /**
  * Represents the ServiceMix JBI container
  */
-public interface Container {
+public interface ComponentUtil {
     
     /**
      * Get a {@link ClientFactory} for building a client to access this container
      * 
      * @return the factory
      */
-    ClientFactory getClientFactory();
-    ComponentUtil getComponentByName(String name);
+    Component getComponent();
 }
