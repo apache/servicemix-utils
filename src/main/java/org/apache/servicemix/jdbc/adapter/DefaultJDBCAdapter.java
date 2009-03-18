@@ -23,7 +23,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -308,6 +310,23 @@ public class DefaultJDBCAdapter implements JDBCAdapter {
             close(rs);
             close(s);
         }
+    }
+    
+    public Map<String, byte[]> doLoadData(Connection connection) throws SQLException, IOException {
+        Statement s = null;
+        ResultSet rs = null;
+        Map<String, byte[]> data = new HashMap<String, byte[]>();
+        try {
+            s = connection.createStatement();
+            rs = s.executeQuery(statements.getFindAllDataStatement());
+            while (rs.next()) {
+                data.put(rs.getString(1), getBinaryData(rs, 2));
+            }
+        } finally {
+            close(rs);
+            close(s);
+        }
+        return data;
     }
 
 }

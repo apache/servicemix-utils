@@ -19,6 +19,7 @@ package org.apache.servicemix.jdbc;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Map;
 
 public interface JDBCAdapter {
 
@@ -29,6 +30,8 @@ public interface JDBCAdapter {
     byte[] doLoadData(Connection connection, String id) throws SQLException, IOException;
     
     byte[][] doLoadData(Connection connection, String[] ids) throws SQLException, IOException;
+    
+    Map<String, byte[]> doLoadData(Connection connection) throws SQLException, IOException;
     
     void doStoreData(Connection connection, String id, byte[] data) throws SQLException, IOException;
     

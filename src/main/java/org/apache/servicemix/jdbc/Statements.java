@@ -98,7 +98,7 @@ public class Statements {
     public String getFindAllDataStatement() {
         if (findAllDataStatement == null) {
             findAllDataStatement = "SELECT ID, DATA FROM " + getFullStoreTableName()
-                    + " WHERE ORDER BY ID";
+                    + " ORDER BY ID";
         }
         return findAllDataStatement;
     }
