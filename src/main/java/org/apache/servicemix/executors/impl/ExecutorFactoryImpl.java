@@ -55,14 +55,14 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
 
     public Executor createExecutor(String id) {
         ExecutorConfig config = getConfig(id);
-        return new ExecutorImpl(createService(id, config), config.getShutdownDelay());
+        return new ExecutorImpl(createService(id, config), config.getShutdownDelay(), config.isBypassIfSynchronous());
     }
 
     public Executor createDaemonExecutor(String id) {
 
         ExecutorConfig config = getConfig(id);
         config.setThreadDaemon(true);
-        return new ExecutorImpl(createService(id, config), config.getShutdownDelay());
+        return new ExecutorImpl(createService(id, config), config.getShutdownDelay(), config.isBypassIfSynchronous());
     }
 
     protected ExecutorConfig getConfig(String id) {

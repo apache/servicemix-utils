@@ -21,6 +21,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.servicemix.executors.Executor;
+import org.apache.servicemix.executors.ExecutorAwareRunnable;
 
 /**
  * The default Executor implementation which uses a 
@@ -34,12 +35,21 @@ public class ExecutorImpl implements Executor {
 
     private final long shutdownDelay;
 
-    public ExecutorImpl(ThreadPoolExecutor threadPool, long shutdownDelay) {
+    private final boolean bypassIfSynchronous;
+
+    public ExecutorImpl(ThreadPoolExecutor threadPool, long shutdownDelay, boolean bypassIfSynchronous) {
         this.threadPool = threadPool;
         this.shutdownDelay = shutdownDelay;
+        this.bypassIfSynchronous = bypassIfSynchronous;
     }
 
     public void execute(Runnable command) {
+        if (bypassIfSynchronous && command instanceof ExecutorAwareRunnable) {
+            if (((ExecutorAwareRunnable) command).shouldRunSynchronously()) {
+                command.run();
+                return;
+            }
+        }
         threadPool.execute(command);
     }
 

@@ -39,6 +39,8 @@ public class ExecutorConfig {
 
     private boolean allowCoreThreadsTimeout = true;
 
+    private boolean bypassIfSynchronous;
+
     /**
      * @return the corePoolSize
      */
@@ -159,4 +161,17 @@ public class ExecutorConfig {
         this.allowCoreThreadsTimeout = allowCoreThreadsTimeout;
     }
 
+    /**
+     * @return if synchronous tasks should bypass the executor
+     */
+    public boolean isBypassIfSynchronous() {
+        return bypassIfSynchronous;
+    }
+
+    /**
+     * @param bypassIfSynchronous if synchronous tasks should bypass the executor
+     */
+    public void setBypassIfSynchronous(boolean bypassIfSynchronous) {
+        this.bypassIfSynchronous = bypassIfSynchronous;
+    }
 }
