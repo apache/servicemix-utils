@@ -54,6 +54,17 @@ public interface FileMarshaler {
     String getOutputName(MessageExchange exchange, NormalizedMessage message) throws MessagingException;
 
     /**
+     * creates a temporary file name for the given exchange when reading an inbound
+     * message. This name is a (hopefully) unique name used for doing a first writing.
+     * It will be renamed to the real output name after successfully finished transmission.
+     * 
+     * @param exchange the inbound message exchange
+     * @param message the inbound message
+     * @return the file name or null if a file name could not be found or calculated
+     */
+    String getTempOutputName(MessageExchange exchange, NormalizedMessage message) throws MessagingException;
+    
+    /**
      * Writes the inbound message to the destination stream of the given name
      *
      * @param exchange the inbound message exchange

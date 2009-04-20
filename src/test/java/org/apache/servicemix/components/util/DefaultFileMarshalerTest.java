@@ -88,4 +88,28 @@ public class DefaultFileMarshalerTest extends TestCase {
         return exchange;
     }
 
+    public void testTempFileNameFromNmsg() throws Exception {
+    	String tmp = "tmp_filename.ext_123";
+    	MessageExchange exchange = createMockExchange();
+    	exchange.getMessage("in").setContent(new StringSource(MESSAGE));
+    	exchange.getMessage("in").setProperty(DefaultFileMarshaler.TEMP_FILE_NAME_PROPERTY, tmp);
+    	String tempName = marshaler.getTempOutputName(exchange, exchange.getMessage("in"));
+    	assertEquals("The temp file name was not extracted correctly", tmp, tempName);
+    }
+    
+    public void testTempFileNameFromExchange() throws Exception {
+    	String tmp = "tmp_filename.ext_123";
+    	MessageExchange exchange = createMockExchange();
+    	exchange.getMessage("in").setContent(new StringSource(MESSAGE));
+    	exchange.setProperty(DefaultFileMarshaler.TEMP_FILE_NAME_PROPERTY, tmp);
+    	String tempName = marshaler.getTempOutputName(exchange, exchange.getMessage("in"));
+    	assertEquals("The temp file name was not extracted correctly", tmp, tempName);
+    }
+    
+    public void testTempFileNameNull() throws Exception {
+    	MessageExchange exchange = createMockExchange();
+    	exchange.getMessage("in").setContent(new StringSource(MESSAGE));
+    	String tempName = marshaler.getTempOutputName(exchange, exchange.getMessage("in"));
+    	assertNull("The temp file name was not null", tempName);
+    }
 }

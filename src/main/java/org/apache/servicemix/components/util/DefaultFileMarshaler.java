@@ -47,13 +47,16 @@ import org.apache.servicemix.expression.PropertyExpression;
 public class DefaultFileMarshaler extends MarshalerSupport implements FileMarshaler {
 
     public static final String FILE_NAME_PROPERTY = "org.apache.servicemix.file.name";
+    public static final String TEMP_FILE_NAME_PROPERTY = "org.apache.servicemix.file.name.temp";
     public static final String FILE_PATH_PROPERTY = "org.apache.servicemix.file.path";
     public static final String FILE_CONTENT = "org.apache.servicemix.file.content";
 
     protected static final PropertyExpression FILE_NAME_EXPRESSION = new PropertyExpression(FILE_NAME_PROPERTY);
+    protected static final PropertyExpression TEMP_FILE_NAME_EXPRESSION = new PropertyExpression(TEMP_FILE_NAME_PROPERTY);
     protected static final PropertyExpression FILE_CONTENT_EXPRESSION = new PropertyExpression(FILE_CONTENT);
 
     private Expression fileName = FILE_NAME_EXPRESSION;
+    private Expression tempFileName = TEMP_FILE_NAME_EXPRESSION;
     private Expression content = FILE_CONTENT_EXPRESSION;
     private String encoding;
 
@@ -72,6 +75,12 @@ public class DefaultFileMarshaler extends MarshalerSupport implements FileMarsha
         return asString(fileName.evaluate(exchange, message));
     }
 
+	public String getTempOutputName(MessageExchange exchange,
+			NormalizedMessage message) throws MessagingException {
+		Object retVal = tempFileName.evaluate(exchange, message);
+		return retVal == null ? null : asString(retVal);
+	}
+    
     public void writeMessage(MessageExchange exchange, NormalizedMessage message, 
                              OutputStream out, String path) throws IOException, JBIException {
         try {
@@ -153,5 +162,4 @@ public class DefaultFileMarshaler extends MarshalerSupport implements FileMarsha
             throw new MessagingException(e);
         }
     }
-
 }
