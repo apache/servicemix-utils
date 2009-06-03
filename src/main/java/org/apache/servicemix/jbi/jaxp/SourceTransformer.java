@@ -58,6 +58,7 @@ import org.xml.sax.XMLReader;
 public class SourceTransformer {
 
     public static final String DEFAULT_CHARSET_PROPERTY = "org.apache.servicemix.default.charset";
+    public static final String DEFAULT_VALIDATING_DTD_PROPERTY = "org.apache.servicemix.default.validating-dtd";
 
     /*
      * When converting a DOM tree to a SAXSource, we try to use Xalan internal
@@ -76,6 +77,7 @@ public class SourceTransformer {
     }
 
     private static String defaultCharset = System.getProperty(DEFAULT_CHARSET_PROPERTY, "UTF-8");
+    private static boolean defaultValidatingDtd = (new Boolean(System.getProperty(DEFAULT_VALIDATING_DTD_PROPERTY, "true"))).booleanValue();
 
     private DocumentBuilderFactory documentBuilderFactory;
 
@@ -94,6 +96,14 @@ public class SourceTransformer {
 
     public static void setDefaultCharset(String defaultCharset) {
         SourceTransformer.defaultCharset = defaultCharset;
+    }
+    
+    public static boolean getDefaultValidatingDtd() {
+        return defaultValidatingDtd;
+    }
+    
+    public static void setDefaultValidatingDtd(boolean defaultValidatingDtd) {
+        SourceTransformer.defaultValidatingDtd = defaultValidatingDtd;
     }
 
     /**
@@ -278,6 +288,8 @@ public class SourceTransformer {
             try {
                 Constructor cns = DOM_2_SAX_CLASS.getConstructor(new Class[] {Node.class });
                 XMLReader converter = (XMLReader) cns.newInstance(new Object[] {source.getNode() });
+                converter.setFeature("http://xml.org/sax/features/validation", defaultValidatingDtd);
+                converter.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", defaultValidatingDtd);
                 return new SAXSource(converter, new InputSource());
             } catch (Exception e) {
                 throw new TransformerException(e);
@@ -467,6 +479,7 @@ public class SourceTransformer {
         factory.setNamespaceAware(true);
         factory.setIgnoringElementContentWhitespace(true);
         factory.setIgnoringComments(true);
+        factory.setValidating(defaultValidatingDtd);
         return factory;
     }
 
