@@ -114,7 +114,7 @@ public class MockMessageExchange implements MessageExchange {
     public void setInMessage(NormalizedMessage in) {
         this.inMessage = in;
     }
-
+    
     /**
      * @return the interfaceName
      */
@@ -226,7 +226,10 @@ public class MockMessageExchange implements MessageExchange {
             return getInMessage();
         } else if ("out".equalsIgnoreCase(name)) {
             return getOutMessage();
+        } else if ("fault".equalsIgnoreCase(name)) {
+            return getFault();
         }
+        
         return null;
     }
 
@@ -247,6 +250,8 @@ public class MockMessageExchange implements MessageExchange {
             setInMessage(msg);
         } else if ("out".equalsIgnoreCase(name)) {
             setOutMessage(msg);
+        } else if ("fault".equalsIgnoreCase(name)) {
+            setFault((Fault) msg);
         }
     }
 
