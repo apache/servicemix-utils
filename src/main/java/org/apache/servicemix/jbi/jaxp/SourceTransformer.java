@@ -77,7 +77,7 @@ public class SourceTransformer {
     }
 
     private static String defaultCharset = System.getProperty(DEFAULT_CHARSET_PROPERTY, "UTF-8");
-    private static boolean defaultValidatingDtd = (new Boolean(System.getProperty(DEFAULT_VALIDATING_DTD_PROPERTY, "true"))).booleanValue();
+    private static boolean defaultValidatingDtd = (new Boolean(System.getProperty(DEFAULT_VALIDATING_DTD_PROPERTY, "false"))).booleanValue();
 
     private DocumentBuilderFactory documentBuilderFactory;
 
