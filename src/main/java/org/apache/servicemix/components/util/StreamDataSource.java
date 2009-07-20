@@ -16,65 +16,26 @@
  */
 package org.apache.servicemix.components.util;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-
-import javax.activation.DataSource;
 
 /**
  * Stream DataSource for Mail and message attachments .
  *
  * @author <a href="mailto:gnodet@logicblaze.com"> Guillaume Nodet</a>
  * @since 3.0
+ * @deprecated use org.apache.servicemix.util.jaf.StreamDataSource instead
  */
-public class StreamDataSource implements DataSource {
+public class StreamDataSource extends org.apache.servicemix.util.jaf.StreamDataSource {
 
-    private InputStream in;
-
-    private String contentType;
-
-    private String name;
-
-    public StreamDataSource(InputStream in) {
-        this(in, null, null);
+	public StreamDataSource(InputStream in) {
+        super(in);
     }
 
     public StreamDataSource(InputStream in, String contentType) {
-        this(in, contentType, null);
+        super(in, contentType);
     }
 
     public StreamDataSource(InputStream in, String contentType, String name) {
-        this.in = in;
-        this.contentType = contentType;
-        this.name = name;
+        super(in, contentType, name);
     }
-
-    public InputStream getInputStream() throws IOException {
-        if (in == null) {
-            throw new IOException("no data");
-        }
-        return in;
-    }
-
-    public OutputStream getOutputStream() throws IOException {
-        throw new IOException("getOutputStream() not supported");
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
 }
