@@ -113,7 +113,7 @@ public class StaxSourceTest extends TestCase {
         assertEquals(1, l.getLength());
         assertEquals(1, l.item(0).getChildNodes().getLength());
         Text txt = (Text) l.item(0).getFirstChild();
-        assertEquals("   ", txt.getTextContent());
+        assertEquals("   ", txt.getData());
 
         // Check long string
         l = doc.getDocumentElement().getElementsByTagName("long");
@@ -133,7 +133,7 @@ public class StaxSourceTest extends TestCase {
                 expected.append("\n");
             }
         }
-        assertEquals(expected.toString(), txt.getTextContent());
+        assertEquals(expected.toString(), txt.getData());
     }
 
     protected void compare(String s1, String s2) {
