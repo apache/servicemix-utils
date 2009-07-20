@@ -28,6 +28,7 @@ import javax.jbi.messaging.MessagingException;
 import javax.jbi.messaging.NormalizedMessage;
 
 import org.apache.servicemix.util.FileUtil;
+import org.apache.servicemix.util.jaf.StreamDataSource;
 
 /**
  * A FileMarshaler that converts the given input stream into a binary
