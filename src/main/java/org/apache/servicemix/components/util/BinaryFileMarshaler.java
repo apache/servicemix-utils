@@ -27,6 +27,8 @@ import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.MessagingException;
 import javax.jbi.messaging.NormalizedMessage;
 
+import org.apache.servicemix.util.FileUtil;
+
 /**
  * A FileMarshaler that converts the given input stream into a binary
  * attachment.
@@ -104,14 +106,6 @@ public class BinaryFileMarshaler extends DefaultFileMarshaler {
      * @throws IOException
      */
     protected static void copyInputStream(InputStream in, OutputStream out) throws IOException {
-        byte[] buffer = new byte[8192];
-        int len = in.read(buffer);
-        while (len >= 0) {
-            out.write(buffer, 0, len);
-            len = in.read(buffer);
-        }
-        in.close();
-        out.close();
+        FileUtil.fastCopy(in, out);
     }
-
 }
