@@ -41,12 +41,6 @@ import java.util.zip.ZipOutputStream;
  */
 public final class FileUtil {
 
-	/**
-	 * Buffer size used when copying the content of an input stream to an output
-	 * stream.
-	 */
-	private static final int DEFAULT_BUFFER_SIZE = 4096;
-
 	private FileUtil() {
 	}
 
@@ -59,9 +53,11 @@ public final class FileUtil {
 	 */
 	public static void moveFile(File src, File targetDirectory)
 			throws IOException {
-		if (!src.renameTo(new File(targetDirectory, src.getName()))) {
-			throw new IOException("Failed to move " + src + " to "
-					+ targetDirectory);
+		if (src == null || !src.exists() || !src.isFile() ||
+		    targetDirectory == null || !targetDirectory.exists() || !targetDirectory.isDirectory() ||
+		    !src.renameTo(new File(targetDirectory, src.getName()))) {
+			// unable to move the file
+			throw new IOException("Failed to move " + src + " to " + targetDirectory);
 		}
 	}
 
@@ -119,14 +115,8 @@ public final class FileUtil {
 	 */
 	public static void copyInputStream(InputStream in, OutputStream out)
 			throws IOException {
-		byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-		int len = in.read(buffer);
-		while (len >= 0) {
-			out.write(buffer, 0, len);
-			len = in.read(buffer);
-		}
-		in.close();
-		out.close();
+		// simply use the fastCopy method
+		fastCopy(in, out);
 	}
 
 	/**
@@ -182,8 +172,7 @@ public final class FileUtil {
 		if (!targetDir.exists()) {
 			targetDir.mkdirs();
 		}
-		InputStream in = new BufferedInputStream(url.openStream(),
-				DEFAULT_BUFFER_SIZE);
+		InputStream in = new BufferedInputStream(url.openStream());
 		// make sure we get the actual file
 		File zip = File.createTempFile("arc", ".zip", targetDir);
 		OutputStream out = new BufferedOutputStream(new FileOutputStream(zip));
