@@ -67,9 +67,28 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.1.1</version>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.5.8</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.5.8</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl104-over-slf4j</artifactId>
+        <version>1.5.8</version> 
+        <scope>test</scope>       
+    </dependency>
+    <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>1.2.14</version>
+        <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.servicemix.specs</groupId>
@@ -154,7 +173,7 @@
     <dependency>
       <groupId>org.jencks</groupId>
       <artifactId>jencks</artifactId>
-      <version>2.1</version>
+      <version>2.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -240,7 +259,7 @@
                             <artifactItem>
                                 <groupId>org.apache.servicemix.legal</groupId>
                                 <artifactId>legal</artifactId>
-						          <version>${servicemix.legal.version}</version>
+                                  <version>${servicemix.legal.version}</version>
                                 <type>xml</type>
                                 <outputDirectory>target/legal/</outputDirectory>
                             </artifactItem>
@@ -248,7 +267,7 @@
                         <stripVersion>true</stripVersion>
                     </configuration>
                 </execution>
-	          </executions>
+              </executions>
             <dependencies>                  
                 <dependency>
                      <groupId>org.apache.servicemix.legal</groupId>
@@ -257,7 +276,7 @@
                      <type>xml</type>
                 </dependency>
             </dependencies>
-	      </plugin>
+          </plugin>
         <plugin>
             <artifactId>maven-remote-resources-plugin</artifactId>
             <version>1.0</version>
