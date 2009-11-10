@@ -24,12 +24,12 @@
   <parent>
     <groupId>org.apache.servicemix</groupId>
     <artifactId>servicemix-pom</artifactId>
-    <version>3</version>
+    <version>4</version>
   </parent>
 
   <artifactId>servicemix-utils</artifactId>
   <packaging>bundle</packaging>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.2.0</version>
   <name>Apache ServiceMix :: Utils</name>
   <description>Various utility/helper classes and services for the ServiceMix containers and components</description>
 
@@ -38,9 +38,9 @@
   </properties>
 
   <scm>
-      <connection>scm:svn:http://svn.apache.org/repos/asf/servicemix/utils/trunk</connection>
-      <developerConnection>scm:svn:https://svn.apache.org/repos/asf/servicemix/utils/trunk</developerConnection>
-      <url>http://svn.apache.org/viewvc/servicemix/smx4/specs/utils/trunk</url>
+      <connection>scm:svn:http://svn.apache.org/repos/asf/servicemix/utils/tags/servicemix-utils-1.2.0</connection>
+      <developerConnection>scm:svn:https://svn.apache.org/repos/asf/servicemix/utils/tags/servicemix-utils-1.2.0</developerConnection>
+      <url>http://svn.apache.org/viewvc/servicemix/smx4/specs/utils/tags/servicemix-utils-1.2.0</url>
   </scm>
 
   <dependencies>
@@ -234,7 +234,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.0-beta-8</version>
+        <version>2.0-beta-7</version>
         <configuration>
           <useReleaseProfile>false</useReleaseProfile>
           <preparationGoals>clean verify install</preparationGoals>
@@ -303,16 +303,6 @@
         </plugin>
     </plugins>
   </build>
-
-  <repositories>
-    <!-- repository for JAXB implementation -->
-    <repository>
-      <id>java.net</id>
-      <name>java.net Maven Repository</name>
-      <url>https://maven-repository.dev.java.net/nonav/repository</url>
-      <layout>legacy</layout>
-    </repository>
-  </repositories>
 
   <profiles>
       <profile>
