@@ -41,6 +41,10 @@ public class FragmentStreamReader extends StreamReaderDelegate implements XMLStr
 
     public FragmentStreamReader(XMLStreamReader parent) {
         super(parent);
+        
+        // fix for SM-1783
+        state = parent.getEventType();
+        
         NamespaceContext ctx = getParent().getNamespaceContext();
         if (ctx instanceof ExtendedNamespaceContext) {
             rootPrefixes = new ArrayList();
