@@ -80,7 +80,7 @@
     </dependency>
     <dependency>
         <groupId>org.slf4j</groupId>
-        <artifactId>jcl104-over-slf4j</artifactId>
+        <artifactId>jcl-over-slf4j</artifactId>
         <version>1.5.8</version> 
         <scope>test</scope>       
     </dependency>
@@ -216,17 +216,11 @@
           <instructions>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
-            <Export-Package>org.apache.servicemix*</Export-Package>
+            <Export-Package>
+                org.apache.servicemix*;-noimport:=true
+            </Export-Package>
             <Import-Package>
-                com.thoughtworks.xstream*;resolution:=optional,
-                javax.activation;resolution:=optional,
-                javax.resource.spi.work;resolution:=optional,
-                javax.security.auth;resolution:=optional,
-                javax.xml.stream*;resolution:=optional,
-                org.apache.xmlbeans*;resolution:=optional,
-                org.jaxen*;resolution:=optional,
-                org.springframework*;resolution:=optional,
-                *
+                *;resolution:=optional
             </Import-Package>
           </instructions>
         </configuration>
