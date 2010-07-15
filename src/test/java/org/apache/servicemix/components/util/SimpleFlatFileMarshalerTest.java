@@ -77,7 +77,7 @@ public class SimpleFlatFileMarshalerTest extends TestCase {
         marshaler.setColumnLengths(new String[] {"2", "3", "5", "8" });
         marshaler.setColumnNames(new String[] {"Number", "Text1", "Text2", "Date" });
 
-        List columnConverters = new ArrayList();
+        List<ContentConverter> columnConverters = new ArrayList<ContentConverter>();
         columnConverters.add(new NumberConverter());
         columnConverters.add(null);
         columnConverters.add(null);

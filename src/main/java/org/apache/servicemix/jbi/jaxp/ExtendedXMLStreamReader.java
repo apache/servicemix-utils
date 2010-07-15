@@ -64,8 +64,8 @@ public class ExtendedXMLStreamReader extends StreamReaderDelegate {
         return next;
     }
 
-    private Map getNamespaces() {
-        Map ns = new HashMap();
+    private Map<String, String> getNamespaces() {
+        Map<String, String> ns = new HashMap<String, String>();
         for (int i = 0; i < getNamespaceCount(); i++) {
             ns.put(getNamespacePrefix(i), getNamespaceURI(i));
         }

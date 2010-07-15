@@ -44,7 +44,7 @@ public class JaxenVariableContext implements VariableContext {
 
     private NormalizedMessage message;
 
-    private Map variables;
+    private Map<String, Object> variables;
 
     public MessageExchange getExchange() {
         return exchange;
@@ -62,7 +62,7 @@ public class JaxenVariableContext implements VariableContext {
         this.message = message;
     }
 
-    public Map getVariables() {
+    public Map<String, Object> getVariables() {
         return variables;
     }
 
@@ -71,7 +71,7 @@ public class JaxenVariableContext implements VariableContext {
      *
      * @param variables
      */
-    public void setVariables(Map variables) {
+    public void setVariables(Map<String, Object> variables) {
         this.variables = variables;
     }
 
@@ -103,7 +103,7 @@ public class JaxenVariableContext implements VariableContext {
      */
     public void setVariableValue(String localPart, Object value) {
         if (variables == null) {
-            variables = new HashMap();
+            variables = new HashMap<String, Object>();
         }
         variables.put(localPart, value);
     }

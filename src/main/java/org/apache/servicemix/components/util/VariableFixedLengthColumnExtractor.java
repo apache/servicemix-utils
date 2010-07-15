@@ -122,6 +122,7 @@ public class VariableFixedLengthColumnExtractor implements ColumnExtractor {
         this.variableColumnLengths = variableColumnLengths;
     }
 
+    @SuppressWarnings("unchecked")
     public final void setStringEncodedVariableColumnLengths(String columnLengths) {
         this.variableColumnLengths = null;
         String[] entries = StringUtils.splitWorker(columnLengths, ";", -1, false);

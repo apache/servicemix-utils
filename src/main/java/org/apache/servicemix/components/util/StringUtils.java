@@ -84,7 +84,7 @@ final class StringUtils {
         if (len == 0) {
             return EMPTY_STRING_ARRAY;
         }
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         int sizePlus1 = 1;
         int i = 0;
         int start = 0;

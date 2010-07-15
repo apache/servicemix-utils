@@ -33,16 +33,16 @@ import javax.xml.xpath.XPathFactory;
  */
 public class DefaultNamespaceContext implements NamespaceContext {
 
-    private final Map map;
+    private final Map<String, String> map;
     private final NamespaceContext parent;
 
     public DefaultNamespaceContext() {
-        this.map = new HashMap();
+        this.map = new HashMap<String, String>();
         XPathFactory factory = XPathFactory.newInstance();
         this.parent = factory.newXPath().getNamespaceContext();
     }
 
-    public DefaultNamespaceContext(NamespaceContext parent, Map map) {
+    public DefaultNamespaceContext(NamespaceContext parent, Map<String, String> map) {
         this.parent = parent;
         this.map = map;
     }
@@ -77,9 +77,8 @@ public class DefaultNamespaceContext implements NamespaceContext {
     }
 
     public Iterator getPrefixes(String namespaceURI) {
-        Set set = new HashSet();
-        for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry entry = (Map.Entry) iter.next();
+        Set<String> set = new HashSet<String>();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
             if (namespaceURI.equals(entry.getValue())) {
                 set.add(entry.getKey());
             }
@@ -87,7 +86,7 @@ public class DefaultNamespaceContext implements NamespaceContext {
         if (parent != null) {
             Iterator iter = parent.getPrefixes(namespaceURI);
             while (iter.hasNext()) {
-                set.add(iter.next());
+                set.add((String)iter.next());
             }
         }
         return set.iterator();

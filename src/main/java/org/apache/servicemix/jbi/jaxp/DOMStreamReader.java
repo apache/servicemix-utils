@@ -31,6 +31,9 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Node;
+
 /**
  * Abstract logic for creating XMLStreamReader from DOM documents. Its works
  * using adapters for Element, Node and Attribute (
@@ -60,7 +63,7 @@ public abstract class DOMStreamReader implements XMLStreamReader {
         int currentElement = -1;
         List<String> uris;
         List<String> prefixes;
-        List attributes;
+        List<Attr> attributes;
         final ElementFrame parent;
 
         public ElementFrame(Object element, ElementFrame parent) {

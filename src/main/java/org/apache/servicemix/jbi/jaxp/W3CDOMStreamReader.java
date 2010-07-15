@@ -106,7 +106,7 @@ public class W3CDOMStreamReader extends DOMStreamReader {
                 frame.uris.add(value);
                 frame.prefixes.add(prefix);
             } else {
-                frame.attributes.add(node);
+                frame.attributes.add((Attr)node);
             }
         }
     }

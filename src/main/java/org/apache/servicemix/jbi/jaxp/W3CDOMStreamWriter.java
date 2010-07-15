@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
 public class W3CDOMStreamWriter extends DOMStreamWriter {
     static final String XML_NS = "http://www.w3.org/2000/xmlns/";
 
-    private Stack stack = new Stack();
+    private Stack<Element> stack = new Stack<Element>();
 
     private Document document;
 

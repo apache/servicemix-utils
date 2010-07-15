@@ -37,7 +37,7 @@ public class FragmentStreamReader extends StreamReaderDelegate implements XMLStr
     private int depth;
     private int state = STATE_START_DOC;
     private int event = START_DOCUMENT;
-    private List rootPrefixes;
+    private List<String> rootPrefixes;
 
     public FragmentStreamReader(XMLStreamReader parent) {
         super(parent);
@@ -47,7 +47,7 @@ public class FragmentStreamReader extends StreamReaderDelegate implements XMLStr
         
         NamespaceContext ctx = getParent().getNamespaceContext();
         if (ctx instanceof ExtendedNamespaceContext) {
-            rootPrefixes = new ArrayList();
+            rootPrefixes = new ArrayList<String>();
             Iterator it = ((ExtendedNamespaceContext) ctx).getPrefixes();
             while (it.hasNext()) {
                 String prefix = (String) it.next();

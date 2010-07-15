@@ -17,6 +17,7 @@
 package org.apache.servicemix.components.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -141,7 +142,7 @@ public class SimpleFlatFileMarshaler extends DefaultFileMarshaler {
     }
 
     private static class CustomEndOfLineIterator
-            implements Iterator {
+            implements Iterator, Closeable {
 
         private InputStreamReader inr;
         private String lineSeparator;

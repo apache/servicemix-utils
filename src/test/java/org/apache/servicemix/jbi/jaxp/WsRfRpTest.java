@@ -36,6 +36,7 @@ public class WsRfRpTest extends TestCase {
         reader.nextTag();
         source = new StaxSource(new FragmentStreamReader(reader));
 
+        @SuppressWarnings("unchecked")
         JAXBElement<QName> e = (JAXBElement<QName>) context.createUnmarshaller().unmarshal(source);
         assertNotNull(e.getValue());
         System.out.println(e.getValue());

@@ -165,8 +165,8 @@ public final class MessageUtil {
 
         private Subject subject;
         private Source content;
-        private Map properties = new HashMap();
-        private Map attachments = new HashMap();
+        private Map<String, Object> properties = new HashMap<String, Object>();
+        private Map<String, DataHandler> attachments = new HashMap<String, DataHandler>();
 
         public NormalizedMessageImpl() {
         }
@@ -211,7 +211,7 @@ public final class MessageUtil {
         }
 
         public DataHandler getAttachment(String id) {
-            return (DataHandler) this.attachments.get(id);
+            return this.attachments.get(id);
         }
 
         public Set getAttachmentNames() {

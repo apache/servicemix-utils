@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 public class SimpleLockTest extends TestCase {
 
     public void testSimple() {
+        @SuppressWarnings("deprecation")
         Lock l = new SimpleLock();
 
         assertTrue(l.tryLock());

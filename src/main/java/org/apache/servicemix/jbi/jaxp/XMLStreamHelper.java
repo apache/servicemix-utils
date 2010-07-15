@@ -97,18 +97,14 @@ public final class XMLStreamHelper implements XMLStreamConstants {
         }
 
         // Write out the element name
-        if (uri != null) {
-            if (prefix.length() == 0) {
+        if (prefix.length() == 0) {
 
-                writer.writeStartElement(local);
-                writer.setDefaultNamespace(uri);
-
-            } else {
-                writer.writeStartElement(prefix, local, uri);
-                writer.setPrefix(prefix, uri);
-            }
-        } else {
             writer.writeStartElement(local);
+            writer.setDefaultNamespace(uri);
+
+        } else {
+            writer.writeStartElement(prefix, local, uri);
+            writer.setPrefix(prefix, uri);
         }
 
         // Write out the namespaces
@@ -181,18 +177,14 @@ public final class XMLStreamHelper implements XMLStreamConstants {
         }
 
         // Write out the element name
-        if (uri != null) {
-            if (prefix.length() == 0) {
+        if (prefix.length() == 0) {
 
-                writer.writeStartElement(local);
-                writer.setDefaultNamespace(uri);
-
-            } else {
-                writer.writeStartElement(prefix, local, uri);
-                writer.setPrefix(prefix, uri);
-            }
-        } else {
             writer.writeStartElement(local);
+            writer.setDefaultNamespace(uri);
+
+        } else {
+            writer.writeStartElement(prefix, local, uri);
+            writer.setPrefix(prefix, uri);
         }
 
         // Check if the namespace still needs to be written.

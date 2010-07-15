@@ -41,6 +41,7 @@ public class SimpleNamespaceContext implements ExtendedNamespaceContext {
         return parent;
     }
 
+    @SuppressWarnings("unchecked")
     public Iterator getPrefixes() {
         Set prefixes = new HashSet();
         for (SimpleNamespaceContext context = this; context != null; context = context.parent) {
@@ -70,18 +71,19 @@ public class SimpleNamespaceContext implements ExtendedNamespaceContext {
     }
 
     public Iterator getPrefixes(String namespaceURI) {
-        Set prefixes = new HashSet();
+        Set<String> prefixes = new HashSet<String>();
         for (SimpleNamespaceContext context = this; context != null; context = context.parent) {
             for (Iterator it = context.namespaces.keySet().iterator(); it.hasNext();) {
                 Map.Entry entry = (Map.Entry) it.next();
                 if (entry.getValue().equals(namespaceURI)) {
-                    prefixes.add(entry.getKey());
+                    prefixes.add((String)entry.getKey());
                 }
             }
         }
         return prefixes.iterator();
     }
 
+    @SuppressWarnings("unchecked")
     public void add(String prefix, String uri) {
         namespaces.put(prefix, uri);
     }
