@@ -30,7 +30,7 @@
   <artifactId>servicemix-utils</artifactId>
   <packaging>bundle</packaging>
   <version>1.3.0-SNAPSHOT</version>
-  <name>Apache ServiceMix :: Utils</name>
+  <name>Apache ServiceMix :: Utils ${project.version}</name>
   <description>Various utility/helper classes and services for the ServiceMix containers and components</description>
 
   <properties>
