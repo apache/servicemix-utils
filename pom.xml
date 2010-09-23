@@ -93,7 +93,12 @@
     <dependency>
       <groupId>org.apache.servicemix.specs</groupId>
       <artifactId>org.apache.servicemix.specs.jbi-api-1.0</artifactId>
-      <version>1.1.0</version>
+      <version>1.5.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.servicemix.specs</groupId>
+      <artifactId>org.apache.servicemix.specs.locator</artifactId>
+      <version>1.5.0</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -222,6 +227,12 @@
             <Import-Package>
                 *;resolution:=optional
             </Import-Package>
+            <Private-Package>
+                org.apache.servicemix.specs.locator;-split-package:=merge-first
+            </Private-Package>
+            <Bundle-Activator>
+                org.apache.servicemix.specs.locator.Activator
+            </Bundle-Activator>
           </instructions>
         </configuration>
       </plugin>

@@ -93,7 +93,10 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
             queue = new ArrayBlockingQueue<Runnable>(config.getQueueSize());
         }
         ThreadFactory factory = new DefaultThreadFactory(id, config.isThreadDaemon(), config.getThreadPriority());
-        RejectedExecutionHandler handler = new ThreadPoolExecutor.CallerRunsPolicy();
+
+        RejectedExecutionHandler handler = (RejectedExecutionHandler) FactoryFinder.find(RejectedExecutionHandler.class.getName(),
+                                                                                         ThreadPoolExecutor.CallerRunsPolicy.class.getName());
+
         ThreadPoolExecutor service = new ThreadPoolExecutor(config.getCorePoolSize(),
                 config.getMaximumPoolSize() < 0 ? Integer.MAX_VALUE : config.getMaximumPoolSize(), config
                         .getKeepAliveTime(), TimeUnit.MILLISECONDS, queue, factory, handler);
