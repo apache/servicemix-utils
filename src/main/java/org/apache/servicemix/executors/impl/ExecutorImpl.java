@@ -24,9 +24,9 @@ import org.apache.servicemix.executors.Executor;
 import org.apache.servicemix.executors.ExecutorAwareRunnable;
 
 /**
- * The default Executor implementation which uses a 
+ * The default Executor implementation which uses a
  * ThreadPoolExecutor underneath.
- * 
+ *
  * @author <a href="mailto:gnodet [at] gmail.com">Guillaume Nodet</a>
  */
 public class ExecutorImpl implements Executor {
@@ -80,4 +80,7 @@ public class ExecutorImpl implements Executor {
         return queue.size();
     }
 
+    ThreadPoolExecutor getThreadPoolExecutor() {
+        return this.threadPool;
+    }
 }
