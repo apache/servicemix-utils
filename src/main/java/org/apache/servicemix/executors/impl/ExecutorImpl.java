@@ -80,7 +80,7 @@ public class ExecutorImpl implements Executor {
         return queue.size();
     }
 
-    ThreadPoolExecutor getThreadPoolExecutor() {
+    public ThreadPoolExecutor getThreadPoolExecutor() {
         return this.threadPool;
     }
 }
