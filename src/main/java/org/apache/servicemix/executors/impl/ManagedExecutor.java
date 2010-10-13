@@ -101,7 +101,9 @@ public class ManagedExecutor extends javax.management.StandardMBean implements E
     }
 
     public boolean isAllowCoreThreadTimeout() {
-        return this.internalExecutor != null && this.internalExecutor.getThreadPoolExecutor().allowsCoreThreadTimeOut();
+        return false;
+        // TODO: put me back in after switchover to Java 6
+        // return this.internalExecutor != null && this.internalExecutor.getThreadPoolExecutor().allowsCoreThreadTimeOut();
     }
 
     public long getNumberOfRejectedExecutions() {
