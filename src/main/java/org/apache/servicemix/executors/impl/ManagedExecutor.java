@@ -18,6 +18,8 @@
  */
 package org.apache.servicemix.executors.impl;
 
+import java.lang.reflect.Method;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -101,9 +103,20 @@ public class ManagedExecutor extends javax.management.StandardMBean implements E
     }
 
     public boolean isAllowCoreThreadTimeout() {
+        if (this.internalExecutor != null) {
+            ThreadPoolExecutor executor = this.internalExecutor.getThreadPoolExecutor();
+            try {
+                Method m = ThreadPoolExecutor.class.getMethod("allowsCoreThreadTimeOut", null);
+                try {
+                    return (Boolean) m.invoke(executor, null);
+                } catch (Exception ex) {
+                    // ignore
+                }
+            } catch (NoSuchMethodException ex) {
+                // ignore
+            }
+        }
         return false;
-        // TODO: put me back in after switchover to Java 6
-        // return this.internalExecutor != null && this.internalExecutor.getThreadPoolExecutor().allowsCoreThreadTimeOut();
     }
 
     public long getNumberOfRejectedExecutions() {
