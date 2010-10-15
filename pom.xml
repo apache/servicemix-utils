@@ -227,7 +227,7 @@
                 <configuration>
                     <instructions>
                         <Bundle-Name>${project.name}</Bundle-Name>
-                        <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Export-Package>
                             org.apache.servicemix*;-noimport:=true
                         </Export-Package>
