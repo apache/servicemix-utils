@@ -52,6 +52,7 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
     private static final org.apache.commons.logging.Log LOG = org.apache.commons.logging.LogFactory.getLog(ExecutorFactoryImpl.class);
 
     private static final String OBJECT_NAME_PREFIX = "org.apache.servicemix:ContainerName=ServiceMix,Name=Executors,Type=";
+    private static final String OBJECT_NAME_POSTFIX = ",SubType=";
 
     private ExecutorConfig defaultConfig = new ExecutorConfig();
 
@@ -214,10 +215,18 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
 
         if (this.managementStrategy != null) {
             // SMX 4 - ManagementStrategy
-            this.managementStrategy.manageNamedObject(mbean, new javax.management.ObjectName(String.format("%s%s", OBJECT_NAME_PREFIX, sanitize(id))));
+            if (hasSubType(id)) {
+                this.managementStrategy.manageNamedObject(mbean, new javax.management.ObjectName(String.format("%s%s%s%s", OBJECT_NAME_PREFIX, sanitize(getType(id)), OBJECT_NAME_POSTFIX, sanitize(getSubType(id)))));
+            } else {
+                this.managementStrategy.manageNamedObject(mbean, new javax.management.ObjectName(String.format("%s%s", OBJECT_NAME_PREFIX, sanitize(id))));
+            }
         } else if (this.mbeanServer != null) {
             // SMX 3 - MBeanServer
-            this.mbeanServer.registerMBean(mbean, new javax.management.ObjectName(String.format("%s%s", OBJECT_NAME_PREFIX, sanitize(id))));
+            if (hasSubType(id)) {
+                this.mbeanServer.registerMBean(mbean, new javax.management.ObjectName(String.format("%s%s%s%s", OBJECT_NAME_PREFIX, sanitize(getType(id)), OBJECT_NAME_POSTFIX, sanitize(getSubType(id)))));
+            } else {
+                this.mbeanServer.registerMBean(mbean, new javax.management.ObjectName(String.format("%s%s", OBJECT_NAME_PREFIX, sanitize(id))));
+            }
         } else {
             // no possibility to insert the mbean
         }
@@ -234,5 +243,17 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
             result = result.replace(',', '_');
         }
         return result;
+    }
+
+    private boolean hasSubType(String id) {
+        return id.toLowerCase().trim().endsWith(".consumer") || id.toLowerCase().trim().endsWith(".provider");
+    }
+
+    private String getType(String id) {
+        return id.substring(0, id.lastIndexOf("."));
+    }
+
+    private String getSubType(String id) {
+        return id.substring(id.lastIndexOf(".") +1);
     }
 }
