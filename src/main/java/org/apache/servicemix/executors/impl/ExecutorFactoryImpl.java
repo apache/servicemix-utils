@@ -140,12 +140,15 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
 
         final String namePrefix;
 
+        final String id;
+
         final boolean daemon;
 
         final int priority;
 
         DefaultThreadFactory(String id, boolean daemon, int priority) {
             SecurityManager s = System.getSecurityManager();
+            this.id = id;
             group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
             namePrefix = "pool-" + id + "-thread-";
             this.daemon = daemon;
@@ -161,6 +164,21 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
                 t.setPriority(priority);
             }
             return t;
+        }
+
+        /**
+         *
+         * @return
+         */
+        public String toString() {
+            return "DefaultThreadFactory{" +
+                    "  id=" + id +
+                    ", group=" + group +
+                    ", threadNumber=" + threadNumber +
+                    ", namePrefix='" + namePrefix + '\'' +
+                    ", daemon=" + daemon +
+                    ", priority=" + priority +
+                    '}';
         }
     }
 
