@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.jbi.messaging.ExchangeStatus;
 import javax.jbi.messaging.Fault;
@@ -44,7 +45,11 @@ public class MockMessageExchange implements MessageExchange {
     private NormalizedMessage outMessage;
     private Fault fault;
     private Map<String, Object> properties = new HashMap<String, Object>();
-    
+
+    public MockMessageExchange() {
+        exchangeId = UUID.randomUUID().toString();
+    }
+
     /**
      * @return the endpoint
      */

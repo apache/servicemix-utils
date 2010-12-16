@@ -72,11 +72,34 @@ public class MockExchangeFactory implements MessageExchangeFactory {
     }
     
     public static class MockInOnly extends MockMessageExchange implements InOnly {
+
+        public MockInOnly() {
+            super();
+            setPattern(IN_ONLY);
+        }
     }
+
     public static class MockInOut extends MockMessageExchange implements InOut {
+
+        public MockInOut() {
+            super();
+            setPattern(IN_OUT);
+        }
     }
+
     public static class MockInOptionalOut extends MockMessageExchange implements InOptionalOut {
+
+        public MockInOptionalOut() {
+            super();
+            setPattern(IN_OPTIONAL_OUT);
+        }
     }
+
     public static class MockRobustInOnly extends MockMessageExchange implements RobustInOnly {
+
+        public MockRobustInOnly() {
+            super();
+            setPattern(ROBUST_IN_ONLY);
+        }
     }
 }
