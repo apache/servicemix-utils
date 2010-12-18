@@ -60,7 +60,8 @@ public class JdbcStoreFactory implements StoreFactory {
                 if (createDataBase) {
                     adapter.doCreateTables(connection);
                 }
-                connection.commit();
+                if (!connection.getAutoCommit())
+                    connection.commit();
             } catch (SQLException e) {
                 throw (IOException) new IOException("Exception while creating database").initCause(e); 
             } finally {
