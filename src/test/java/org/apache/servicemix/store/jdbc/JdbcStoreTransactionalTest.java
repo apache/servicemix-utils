@@ -72,6 +72,15 @@ public class JdbcStoreTransactionalTest extends TestCase {
         assertNull(store.load("a"));
     }
 
+    public void testStoreAndPeek() throws Exception {
+        Store store = factory.open("store");
+        String id = store.store(new Integer(10));
+        Integer i = (Integer) store.peek(id);
+        assertEquals(10, i.intValue());
+        assertNotNull(store.peek(id));
+        assertNull(store.load("a"));
+    }
+
     public void testStoreAndLoadInOneTx() throws Exception {
         Store store = factory.open("store");
         tm.begin();

@@ -82,9 +82,28 @@ public class JdbcStore implements Store {
             }
             return result;
         } catch (Exception e) {
-            throw (IOException) new IOException("Error storing object").initCause(e);
+            throw (IOException) new IOException("Error loading object").initCause(e);
         } finally {
             close(connection);
+        }
+    }
+
+    public Object peek(String id) throws IOException {
+        LOG.debug("Peeking object with id: " + id);
+        Connection connection = null;
+        try {
+            connection = factory.getDataSource().getConnection();
+            byte[] data = factory.getAdapter().doLoadData(connection, name + ":" + id);
+            Object result = null;
+            if (data != null) {
+                ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
+                result = ois.readObject();
+            }
+            return result;
+        } catch (Exception e) {
+            throw (IOException) new IOException("Error loading object").initCause(e);
+        } finally {
+            close(connection);   
         }
     }
 

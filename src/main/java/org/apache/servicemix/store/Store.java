@@ -73,5 +73,15 @@ public interface Store {
      * @throws IOException if an error occurs
      */
     Object load(String id) throws IOException;
+
+    /**
+     * Loads an object that has been previously stored under the specified key.
+     * The object is not removed from the store.
+     * 
+     * @param id the id of the object
+     * @return the object, or <code>null</code> if the object could not be found
+     * @throws IOException if an error occurs
+     */
+    Object peek(String id) throws IOException;
     
 }

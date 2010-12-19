@@ -59,8 +59,13 @@ public class MemoryStore implements Store {
     }
 
     public Object load(String id) throws IOException {
-        LOG.debug("Loading object with id: " + id);
+        LOG.debug("Loading/Removing object with id: " + id);
         return datas.remove(id);
+    }
+
+    public Object peek(String id) throws IOException {
+        LOG.debug("Peeking object with id: " + id);
+        return datas.get(id);
     }
 
 }
