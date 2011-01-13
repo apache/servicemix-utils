@@ -23,29 +23,69 @@ package org.apache.servicemix.executors.impl;
  */
 public class ExecutorConfig {
 
-    private int corePoolSize = 4;
+    public static final int DEFAULT_CORE_POOL_SIZE = 4;
+    public static final int DEFAULT_MAXIMUM_POOL_SIZE = -1;
+    public static final long DEFAULT_KEEP_ALIVE_TIME = 60000;
+    public static final boolean DEFAULT_THREAD_DAEMON = false;
+    public static final int DEFAULT_THREAD_PRIORITY = Thread.NORM_PRIORITY;
+    public static final int DEFAULT_QUEUE_SIZE = 1024;
+    public static final long DEFAULT_SHUTDOWN_DELAY = 1000;
+    public static final boolean DEFAULT_ALLOW_CORE_THREAD_TIMEOUT = true;
+    public static final boolean DEFAULT_BYPASS_IF_SYNCHRONOUS = false;
 
-    private int maximumPoolSize = -1;
+    private ExecutorConfig parent;
 
-    private long keepAliveTime = 60000;
+    private Integer corePoolSize;
 
-    private boolean threadDaemon;
+    private Integer maximumPoolSize;
 
-    private int threadPriority = Thread.NORM_PRIORITY;
+    private Long keepAliveTime;
 
-    private int queueSize = 1024;
+    private Boolean threadDaemon;
 
-    private long shutdownDelay = 1000;
+    private Integer threadPriority = Thread.NORM_PRIORITY;
 
-    private boolean allowCoreThreadsTimeout = true;
+    private Integer queueSize;
 
-    private boolean bypassIfSynchronous;
+    private Long shutdownDelay;
+
+    private Boolean allowCoreThreadsTimeout;
+
+    private Boolean bypassIfSynchronous;
+
+    /**
+     * default constructor needed by spring beans
+     */
+    public ExecutorConfig() {
+        this(true, null);
+    }
+
+    /**
+     * creates a new executor config using the given parent
+     *
+     * @param parent the parent config
+     */
+    public ExecutorConfig(boolean isDefaultConfig, ExecutorConfig parent) {
+        this.parent = parent;
+        // if this is the default config we don't want undefined values
+        if (isDefaultConfig) {
+            setQueueSize(DEFAULT_QUEUE_SIZE);
+            setShutdownDelay(DEFAULT_SHUTDOWN_DELAY);
+            setThreadDaemon(DEFAULT_THREAD_DAEMON);
+            setThreadPriority(DEFAULT_THREAD_PRIORITY);
+            setAllowCoreThreadsTimeout(DEFAULT_ALLOW_CORE_THREAD_TIMEOUT);
+            setBypassIfSynchronous(DEFAULT_BYPASS_IF_SYNCHRONOUS);
+            setCorePoolSize(DEFAULT_CORE_POOL_SIZE);
+            setKeepAliveTime(DEFAULT_KEEP_ALIVE_TIME);
+            setMaximumPoolSize(DEFAULT_MAXIMUM_POOL_SIZE);
+        }
+    }
 
     /**
      * @return the corePoolSize
      */
     public int getCorePoolSize() {
-        return corePoolSize;
+        return getParent() != null && corePoolSize == null ? getParent().getCorePoolSize() : corePoolSize;
     }
 
     /**
@@ -60,7 +100,7 @@ public class ExecutorConfig {
      * @return the keepAlive
      */
     public long getKeepAliveTime() {
-        return keepAliveTime;
+        return getParent() != null && keepAliveTime == null ? getParent().getKeepAliveTime() : keepAliveTime;
     }
 
     /**
@@ -75,7 +115,7 @@ public class ExecutorConfig {
      * @return the maximumPoolSize
      */
     public int getMaximumPoolSize() {
-        return maximumPoolSize;
+        return getParent() != null && maximumPoolSize == null ? getParent().getMaximumPoolSize() : maximumPoolSize;
     }
 
     /**
@@ -90,7 +130,7 @@ public class ExecutorConfig {
      * @return the queueSize
      */
     public int getQueueSize() {
-        return queueSize;
+        return getParent() != null && queueSize == null ? getParent().getQueueSize() : queueSize;
     }
 
     /**
@@ -105,7 +145,7 @@ public class ExecutorConfig {
      * @return the threadDaemon
      */
     public boolean isThreadDaemon() {
-        return threadDaemon;
+        return getParent() != null && threadDaemon == null ? getParent().isThreadDaemon() : threadDaemon;
     }
 
     /**
@@ -120,7 +160,7 @@ public class ExecutorConfig {
      * @return the threadPriority
      */
     public int getThreadPriority() {
-        return threadPriority;
+        return getParent() != null && threadPriority == null ? getParent().getThreadPriority() : threadPriority;
     }
 
     /**
@@ -135,7 +175,7 @@ public class ExecutorConfig {
      * @return the shutdownDelay
      */
     public long getShutdownDelay() {
-        return shutdownDelay;
+        return getParent() != null && shutdownDelay == null ? getParent().getShutdownDelay() : shutdownDelay;
     }
 
     /**
@@ -150,7 +190,7 @@ public class ExecutorConfig {
      * @return the allowCoreThreadsTimeout
      */
     public boolean isAllowCoreThreadsTimeout() {
-        return allowCoreThreadsTimeout;
+        return getParent() != null && allowCoreThreadsTimeout == null ? getParent().isAllowCoreThreadsTimeout() : allowCoreThreadsTimeout;
     }
 
     /**
@@ -165,7 +205,7 @@ public class ExecutorConfig {
      * @return if synchronous tasks should bypass the executor
      */
     public boolean isBypassIfSynchronous() {
-        return bypassIfSynchronous;
+        return getParent() != null && bypassIfSynchronous == null ? getParent().isBypassIfSynchronous() : bypassIfSynchronous;
     }
 
     /**
@@ -173,5 +213,13 @@ public class ExecutorConfig {
      */
     public void setBypassIfSynchronous(boolean bypassIfSynchronous) {
         this.bypassIfSynchronous = bypassIfSynchronous;
+    }
+
+    public ExecutorConfig getParent() {
+        return parent;
+    }
+
+    public void setParent(ExecutorConfig parent) {
+        this.parent = parent;
     }
 }

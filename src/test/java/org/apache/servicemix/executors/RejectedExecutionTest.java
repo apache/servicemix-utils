@@ -17,14 +17,14 @@
 
 package org.apache.servicemix.executors;
 
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
-
 import junit.framework.TestCase;
 import org.apache.servicemix.executors.impl.ExecutorConfig;
 import org.apache.servicemix.executors.impl.ExecutorFactoryImpl;
 import org.apache.servicemix.executors.impl.ExecutorImpl;
 import org.apache.servicemix.executors.impl.ManagedExecutor;
+
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor.AbortPolicy;
 
 public class RejectedExecutionTest extends TestCase {
 
@@ -40,7 +40,7 @@ public class RejectedExecutionTest extends TestCase {
 
     @Override
     protected void setUp() throws Exception {
-        config = new ExecutorConfig();
+        config = new ExecutorConfig(true, null);
         config.setCorePoolSize(1);
         config.setMaximumPoolSize(1);
         config.setQueueSize(2);

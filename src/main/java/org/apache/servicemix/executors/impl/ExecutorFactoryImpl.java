@@ -16,21 +16,14 @@
  */
 package org.apache.servicemix.executors.impl;
 
+import org.apache.servicemix.executors.Executor;
+import org.apache.servicemix.executors.ExecutorFactory;
+
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.apache.servicemix.executors.Executor;
-import org.apache.servicemix.executors.ExecutorFactory;
 
 /**
  * Default implementation of the ExecutorFactory.
@@ -54,7 +47,7 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
     private static final String OBJECT_NAME_PREFIX = "org.apache.servicemix:ContainerName=ServiceMix,Name=Executors,Type=";
     private static final String OBJECT_NAME_POSTFIX = ",SubType=";
 
-    private ExecutorConfig defaultConfig = new ExecutorConfig();
+    private ExecutorConfig defaultConfig = new ExecutorConfig(true, null);
 
     private javax.management.MBeanServer mbeanServer;
     private org.fusesource.commons.management.ManagementStrategy managementStrategy;
