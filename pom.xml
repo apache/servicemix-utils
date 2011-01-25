@@ -35,7 +35,7 @@
 
     <properties>
         <servicemix.legal.version>1.0</servicemix.legal.version>
-        <servicemix.specs.version>1.6.0</servicemix.specs.version>
+        <servicemix.specs.version>1.7.0</servicemix.specs.version>
     </properties>
 
     <scm>
