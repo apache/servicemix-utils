@@ -19,6 +19,7 @@ package org.apache.servicemix.executors.impl;
 import org.apache.servicemix.executors.Executor;
 import org.apache.servicemix.executors.ExecutorFactory;
 
+import javax.management.ObjectName;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,11 +53,12 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
     private javax.management.MBeanServer mbeanServer;
     private org.fusesource.commons.management.ManagementStrategy managementStrategy;
 
-    private Map<String, ExecutorConfig> configs = new HashMap<String, ExecutorConfig>();
+    private Map<String, ExecutorConfig> configs         = new HashMap<String, ExecutorConfig>();
+    private Map<Executor, ObjectName>   executorNames   = new HashMap<Executor, ObjectName>();
 
     public Executor createExecutor(String id) {
         ExecutorConfig config = getConfig(id);
-        ExecutorImpl executor = new ExecutorImpl(createService(id, config), config.getShutdownDelay(), config.isBypassIfSynchronous());
+        ExecutorImpl executor = new ExecutorImpl(this, createService(id, config), config.getShutdownDelay(), config.isBypassIfSynchronous());
         try {
             registerMBean(id, executor, config);
         } catch (Exception ex) {
@@ -68,7 +70,7 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
     public Executor createDaemonExecutor(String id) {
         ExecutorConfig config = getConfig(id);
         config.setThreadDaemon(true);
-        ExecutorImpl executor = new ExecutorImpl(createService(id, config), config.getShutdownDelay(), config.isBypassIfSynchronous());
+        ExecutorImpl executor = new ExecutorImpl(this, createService(id, config), config.getShutdownDelay(), config.isBypassIfSynchronous());
         try {
             registerMBean(id, executor, config);
         } catch (Exception ex) {
@@ -222,24 +224,42 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
     }
 
     private void registerMBean(String id, ExecutorImpl executor, ExecutorConfig config) throws Exception {
-        ManagedExecutor mbean = new org.apache.servicemix.executors.impl.ManagedExecutor(id, executor, config);
-
+        ManagedExecutor mbean = new ManagedExecutor(id, executor, config);
+        ObjectName oName = null;
         if (this.managementStrategy != null) {
             // SMX 4 - ManagementStrategy
             if (hasSubType(id)) {
-                this.managementStrategy.manageNamedObject(mbean, new javax.management.ObjectName(String.format("%s%s%s%s", OBJECT_NAME_PREFIX, sanitize(getType(id)), OBJECT_NAME_POSTFIX, sanitize(getSubType(id)))));
+                oName = new javax.management.ObjectName(String.format("%s%s%s%s", OBJECT_NAME_PREFIX, sanitize(getType(id)), OBJECT_NAME_POSTFIX, sanitize(getSubType(id))));
+                this.managementStrategy.manageNamedObject(mbean, oName);
             } else {
-                this.managementStrategy.manageNamedObject(mbean, new javax.management.ObjectName(String.format("%s%s", OBJECT_NAME_PREFIX, sanitize(id))));
+                oName = new javax.management.ObjectName(String.format("%s%s", OBJECT_NAME_PREFIX, sanitize(id)));
+                this.managementStrategy.manageNamedObject(mbean, oName);
             }
         } else if (this.mbeanServer != null) {
             // SMX 3 - MBeanServer
             if (hasSubType(id)) {
-                this.mbeanServer.registerMBean(mbean, new javax.management.ObjectName(String.format("%s%s%s%s", OBJECT_NAME_PREFIX, sanitize(getType(id)), OBJECT_NAME_POSTFIX, sanitize(getSubType(id)))));
+                oName = new javax.management.ObjectName(String.format("%s%s%s%s", OBJECT_NAME_PREFIX, sanitize(getType(id)), OBJECT_NAME_POSTFIX, sanitize(getSubType(id))));
+                this.mbeanServer.registerMBean(mbean, oName);
             } else {
-                this.mbeanServer.registerMBean(mbean, new javax.management.ObjectName(String.format("%s%s", OBJECT_NAME_PREFIX, sanitize(id))));
+                oName = new javax.management.ObjectName(String.format("%s%s", OBJECT_NAME_PREFIX, sanitize(id)));
+                this.mbeanServer.registerMBean(mbean, oName);
             }
         } else {
             // no possibility to insert the mbean
+        }
+        this.executorNames.put(mbean.getInternalExecutor(), oName);
+    }
+
+    void unregisterMBean(Executor executor) throws Exception {
+        ObjectName oName = this.executorNames.remove(executor);
+        if (this.managementStrategy != null) {
+            // SMX 4 - ManagementStrategy
+            this.managementStrategy.unmanageNamedObject(oName);
+        } else if (this.mbeanServer != null) {
+            // SMX 3 - MBeanServer
+            this.mbeanServer.unregisterMBean(oName);
+        } else {
+            // no possibility to remove the mbean
         }
     }
 

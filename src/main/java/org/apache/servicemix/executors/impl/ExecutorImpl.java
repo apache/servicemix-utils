@@ -16,12 +16,12 @@
  */
 package org.apache.servicemix.executors.impl;
 
+import org.apache.servicemix.executors.Executor;
+import org.apache.servicemix.executors.ExecutorAwareRunnable;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.servicemix.executors.Executor;
-import org.apache.servicemix.executors.ExecutorAwareRunnable;
 
 /**
  * The default Executor implementation which uses a
@@ -37,7 +37,10 @@ public class ExecutorImpl implements Executor {
 
     private final boolean bypassIfSynchronous;
 
-    public ExecutorImpl(ThreadPoolExecutor threadPool, long shutdownDelay, boolean bypassIfSynchronous) {
+    private ExecutorFactoryImpl executorFactory;
+
+    public ExecutorImpl(ExecutorFactoryImpl executorFactory, ThreadPoolExecutor threadPool, long shutdownDelay, boolean bypassIfSynchronous) {
+        this.executorFactory = executorFactory;
         this.threadPool = threadPool;
         this.shutdownDelay = shutdownDelay;
         this.bypassIfSynchronous = bypassIfSynchronous;
@@ -54,6 +57,11 @@ public class ExecutorImpl implements Executor {
     }
 
     public void shutdown() {
+        try {
+            this.executorFactory.unregisterMBean(this);
+        } catch (Exception ex) {
+            // ignored
+        }
         threadPool.shutdown();
         if (!threadPool.isTerminated() && shutdownDelay > 0) {
             new Thread(new Runnable() {
