@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.servicemix.id.IdGenerator;
+import org.apache.servicemix.store.Entry;
 
 /**
  * {@link MemoryStore} which removes entries from the store after the specified timeout
@@ -38,7 +39,7 @@ public class TimeoutMemoryStore extends MemoryStore {
         super(idGenerator);
         this.timeout = timeout;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -46,7 +47,7 @@ public class TimeoutMemoryStore extends MemoryStore {
         LOG.debug("Storing object with id: " + id);
         datas.put(id, new Entry(data));
     }
-    
+
     /**
      * {@inheritDoc}
      * 
@@ -57,29 +58,17 @@ public class TimeoutMemoryStore extends MemoryStore {
         evict();
         LOG.debug("Loading object with id:" + id);
         Entry entry = datas.remove(id);
-        return entry == null ? null : entry.data;
+        return entry == null ? null : entry.getTime();
     }
-    
+
     private void evict() {
         long now = System.currentTimeMillis();
         for (String key : datas.keySet()) {
-            long age = now - datas.get(key).time;
+            long age = now - datas.get(key).getTime();
             if (age > timeout) {
                 LOG.debug("Removing object with id " + key + " from store after " + age + " ms");
                 datas.remove(key);
             }
-        }
-    }
-
-    /*
-     * A single store entry
-     */
-    private final class Entry {
-        private final long time = System.currentTimeMillis();
-        private final Object data;
-        
-        private Entry(Object data) {
-            this.data = data;
         }
     }
 }
