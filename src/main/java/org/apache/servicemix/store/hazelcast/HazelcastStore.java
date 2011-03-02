@@ -18,6 +18,7 @@
 package org.apache.servicemix.store.hazelcast;
 
 import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IdGenerator;
 import java.io.IOException;
 import java.io.Serializable;
@@ -37,29 +38,42 @@ public class HazelcastStore implements Store, Serializable {
 
     private Map<String, Entry> datas;
 
+    private HazelcastInstance hazelcastInstance;
     private IdGenerator idGenerator;
     private final long timeout;
 
     /**
      * Constructor
-     * @param idGenerator
      * @param name
      */
-    public HazelcastStore(IdGenerator idGenerator,String name) {
-        this.idGenerator = idGenerator;
-        this.datas = Hazelcast.getMap(name);
-        this.timeout=-1;        
+    public HazelcastStore(String name) {
+        this.hazelcastInstance = Hazelcast.newHazelcastInstance(null);
+        this.idGenerator = hazelcastInstance.getIdGenerator(name);
+        this.datas = hazelcastInstance.getMap(name);
+        this.timeout=-1;
     }
-    
     /**
      * Constructor
-     * @param idGenerator
+     * @param hazelcastInstance
+     * @param name
+     */
+    public HazelcastStore(HazelcastInstance hazelcastInstance,String name) {
+        this.hazelcastInstance = hazelcastInstance;
+        this.idGenerator = hazelcastInstance.getIdGenerator(name);
+        this.datas = hazelcastInstance.getMap(name);
+        this.timeout=-1;        
+    }
+
+    /**
+     * Constructor
+     * @param hazelcastInstance
      * @param name
      * @param timemout
      */
-    public HazelcastStore(IdGenerator idGenerator,String name, long timemout) {
-        this.idGenerator = idGenerator;
-        this.datas = Hazelcast.getMap(name);
+    public HazelcastStore(HazelcastInstance hazelcastInstance,String name, long timemout) {
+        this.hazelcastInstance = hazelcastInstance;
+        this.idGenerator = hazelcastInstance.getIdGenerator(name);
+        this.datas = hazelcastInstance.getMap(name);
         this.timeout=timemout;
     }
 

@@ -35,10 +35,12 @@ public class HazelcastStoreTest extends TestCase {
 
     private Store store;
     private final HazelcastStoreFactory factory = new HazelcastStoreFactory();
+    private HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(null);
     
     public HazelcastStoreTest() {
         super();
         factory.setTimeout(TIMEOUT);
+        factory.setHazelcastInstance(hazelcastInstance);
     }
     
     @Override

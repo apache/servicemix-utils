@@ -18,47 +18,66 @@
 package org.apache.servicemix.store.hazelcast;
 
 import com.hazelcast.core.Hazelcast;
+import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IdGenerator;
+
 import java.io.IOException;
 import java.util.Map;
+
 import org.apache.servicemix.store.Store;
 
 
 /**
- *
  * @author iocanel
  */
 public class HazelcastStoreFactory {
-        
-    private Map<String, HazelcastStore> stores = Hazelcast.getMap(STORE_PREFIX);
+
+    private Map<String, HazelcastStore> stores;
+
+    private HazelcastInstance hazelcastInstance;
     private long timeout = -1;
-    
-    public static final String STORE_PREFIX="org.apache.servicemix.stores";
-    
+
+    public static final String STORE_PREFIX = "org.apache.servicemix.stores";
+
     public synchronized Store open(String name) throws IOException {
+        if (hazelcastInstance == null) {
+            hazelcastInstance = Hazelcast.newHazelcastInstance(null);
+        }
+        stores = hazelcastInstance.getMap(STORE_PREFIX);
         HazelcastStore store = stores.get(name);
-        String storeName = STORE_PREFIX+"."+name;
+        String storeName = STORE_PREFIX + "." + name;
         if (store == null) {
+            IdGenerator idGenerator = hazelcastInstance.getIdGenerator(storeName);
             if (timeout <= 0) {
-                store = new HazelcastStore(Hazelcast.getIdGenerator(storeName),storeName);
+                store = new HazelcastStore(hazelcastInstance, storeName);
             } else {
-                store = new HazelcastStore(Hazelcast.getIdGenerator(storeName), storeName, timeout);
+                store = new HazelcastStore(hazelcastInstance, storeName, timeout);
             }
             stores.put(name, store);
         }
         return store;
     }
-    
+
     /* (non-Javadoc)
-     * @see org.apache.servicemix.store.ExchangeStoreFactory#release(org.apache.servicemix.store.ExchangeStore)
-     */
+    * @see org.apache.servicemix.store.ExchangeStoreFactory#release(org.apache.servicemix.store.ExchangeStore)
+    */
     public synchronized void close(Store store) throws IOException {
         stores.remove(store);
     }
-    
+
+    public long getTimeout() {
+        return timeout;
+    }
+
     public void setTimeout(long timeout) {
         this.timeout = timeout;
     }
-    
 
+    public HazelcastInstance getHazelcastInstance() {
+        return hazelcastInstance;
+    }
+
+    public void setHazelcastInstance(HazelcastInstance hazelcastInstance) {
+        this.hazelcastInstance = hazelcastInstance;
+    }
 }
