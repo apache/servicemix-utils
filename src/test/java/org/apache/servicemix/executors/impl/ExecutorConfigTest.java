@@ -43,12 +43,12 @@ public class ExecutorConfigTest {
         data.put(THREAD_DAEMON, true);
 
         ExecutorConfig config = ExecutorConfig.create(data, null);
-        assertEquals(5, config.getCorePoolSize());
-        assertEquals(10, config.getMaximumPoolSize());
-        assertEquals(50, config.getQueueSize());
-        assertEquals(3000, config.getKeepAliveTime());
-        assertEquals(9000, config.getShutdownDelay());
-        assertEquals(9, config.getThreadPriority());
+        assertEquals(new Integer(5), config.getCorePoolSize());
+        assertEquals(new Integer(10), config.getMaximumPoolSize());
+        assertEquals(new Integer(50), config.getQueueSize());
+        assertEquals(new Long(3000), config.getKeepAliveTime());
+        assertEquals(new Long(9000), config.getShutdownDelay());
+        assertEquals(new Integer(9), config.getThreadPriority());
         assertEquals(true, config.isAllowCoreThreadsTimeout());
         assertEquals(false, config.isBypassIfSynchronous());
         assertEquals(true, config.isThreadDaemon());
@@ -68,12 +68,12 @@ public class ExecutorConfigTest {
         data.put(THREAD_DAEMON, "true");
 
         ExecutorConfig config = ExecutorConfig.create(data, null);
-        assertEquals(5, config.getCorePoolSize());
-        assertEquals(10, config.getMaximumPoolSize());
-        assertEquals(50, config.getQueueSize());
-        assertEquals(3000, config.getKeepAliveTime());
-        assertEquals(9000, config.getShutdownDelay());
-        assertEquals(9, config.getThreadPriority());
+        assertEquals(new Integer(5), config.getCorePoolSize());
+        assertEquals(new Integer(10), config.getMaximumPoolSize());
+        assertEquals(new Integer(50), config.getQueueSize());
+        assertEquals(new Long(3000), config.getKeepAliveTime());
+        assertEquals(new Long(9000), config.getShutdownDelay());
+        assertEquals(new Integer(9), config.getThreadPriority());
         assertEquals(true, config.isAllowCoreThreadsTimeout());
         assertEquals(false, config.isBypassIfSynchronous());
         assertEquals(true, config.isThreadDaemon());
@@ -96,9 +96,9 @@ public class ExecutorConfigTest {
         assertEquals(ExecutorConfig.DEFAULT_CORE_POOL_SIZE, config.getCorePoolSize());
         assertEquals(ExecutorConfig.DEFAULT_MAXIMUM_POOL_SIZE, config.getMaximumPoolSize());
         assertEquals(ExecutorConfig.DEFAULT_QUEUE_SIZE, config.getQueueSize());
-        assertEquals(3000, config.getKeepAliveTime());
-        assertEquals(9000, config.getShutdownDelay());
-        assertEquals(9, config.getThreadPriority());
+        assertEquals(new Long(3000), config.getKeepAliveTime());
+        assertEquals(new Long(9000), config.getShutdownDelay());
+        assertEquals(new Integer(9), config.getThreadPriority());
         assertEquals(true, config.isAllowCoreThreadsTimeout());
         assertEquals(false, config.isBypassIfSynchronous());
         assertEquals(true, config.isThreadDaemon());

@@ -53,7 +53,7 @@ public class ExecutorFactoryImplTest {
         assertEquals("Core pool size is the default",
                      defaultConfig.getCorePoolSize(), impl.getConfig().getCorePoolSize());
         assertEquals("Maximum pool size has been altered",
-                10, impl.getConfig().getMaximumPoolSize());
+                     new Integer(10), impl.getConfig().getMaximumPoolSize());
 
     }
 

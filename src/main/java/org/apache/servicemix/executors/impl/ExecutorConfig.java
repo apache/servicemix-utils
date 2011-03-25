@@ -30,15 +30,15 @@ import static org.apache.servicemix.executors.ExecutorFactory.*;
  */
 public class ExecutorConfig {
 
-    public static final int DEFAULT_CORE_POOL_SIZE = 4;
-    public static final int DEFAULT_MAXIMUM_POOL_SIZE = -1;
-    public static final long DEFAULT_KEEP_ALIVE_TIME = 60000;
-    public static final boolean DEFAULT_THREAD_DAEMON = false;
-    public static final int DEFAULT_THREAD_PRIORITY = Thread.NORM_PRIORITY;
-    public static final int DEFAULT_QUEUE_SIZE = 1024;
-    public static final long DEFAULT_SHUTDOWN_DELAY = 1000;
-    public static final boolean DEFAULT_ALLOW_CORE_THREAD_TIMEOUT = true;
-    public static final boolean DEFAULT_BYPASS_IF_SYNCHRONOUS = false;
+    public static final Integer DEFAULT_CORE_POOL_SIZE = 4;
+    public static final Integer DEFAULT_MAXIMUM_POOL_SIZE = -1;
+    public static final Long DEFAULT_KEEP_ALIVE_TIME = 60000l;
+    public static final Boolean DEFAULT_THREAD_DAEMON = false;
+    public static final Integer DEFAULT_THREAD_PRIORITY = Thread.NORM_PRIORITY;
+    public static final Integer DEFAULT_QUEUE_SIZE = 1024;
+    public static final Long DEFAULT_SHUTDOWN_DELAY = 1000l;
+    public static final Boolean DEFAULT_ALLOW_CORE_THREAD_TIMEOUT = true;
+    public static final Boolean DEFAULT_BYPASS_IF_SYNCHRONOUS = false;
 
     private ExecutorConfig parent;
 
@@ -91,7 +91,7 @@ public class ExecutorConfig {
     /**
      * @return the corePoolSize
      */
-    public int getCorePoolSize() {
+    public Integer getCorePoolSize() {
         return getParent() != null && corePoolSize == null ? getParent().getCorePoolSize() : corePoolSize;
     }
 
@@ -106,7 +106,7 @@ public class ExecutorConfig {
     /**
      * @return the keepAlive
      */
-    public long getKeepAliveTime() {
+    public Long getKeepAliveTime() {
         return getParent() != null && keepAliveTime == null ? getParent().getKeepAliveTime() : keepAliveTime;
     }
 
@@ -121,7 +121,7 @@ public class ExecutorConfig {
     /**
      * @return the maximumPoolSize
      */
-    public int getMaximumPoolSize() {
+    public Integer getMaximumPoolSize() {
         return getParent() != null && maximumPoolSize == null ? getParent().getMaximumPoolSize() : maximumPoolSize;
     }
 
@@ -136,7 +136,7 @@ public class ExecutorConfig {
     /**
      * @return the queueSize
      */
-    public int getQueueSize() {
+    public Integer getQueueSize() {
         return getParent() != null && queueSize == null ? getParent().getQueueSize() : queueSize;
     }
 
@@ -151,7 +151,7 @@ public class ExecutorConfig {
     /**
      * @return the threadDaemon
      */
-    public boolean isThreadDaemon() {
+    public Boolean isThreadDaemon() {
         return getParent() != null && threadDaemon == null ? getParent().isThreadDaemon() : threadDaemon;
     }
 
@@ -166,7 +166,7 @@ public class ExecutorConfig {
     /**
      * @return the threadPriority
      */
-    public int getThreadPriority() {
+    public Integer getThreadPriority() {
         return getParent() != null && threadPriority == null ? getParent().getThreadPriority() : threadPriority;
     }
 
@@ -181,7 +181,7 @@ public class ExecutorConfig {
     /**
      * @return the shutdownDelay
      */
-    public long getShutdownDelay() {
+    public Long getShutdownDelay() {
         return getParent() != null && shutdownDelay == null ? getParent().getShutdownDelay() : shutdownDelay;
     }
 
@@ -196,7 +196,7 @@ public class ExecutorConfig {
     /**
      * @return the allowCoreThreadsTimeout
      */
-    public boolean isAllowCoreThreadsTimeout() {
+    public Boolean isAllowCoreThreadsTimeout() {
         return getParent() != null && allowCoreThreadsTimeout == null ? getParent().isAllowCoreThreadsTimeout() : allowCoreThreadsTimeout;
     }
 
@@ -211,7 +211,7 @@ public class ExecutorConfig {
     /**
      * @return if synchronous tasks should bypass the executor
      */
-    public boolean isBypassIfSynchronous() {
+    public Boolean isBypassIfSynchronous() {
         return getParent() != null && bypassIfSynchronous == null ? getParent().isBypassIfSynchronous() : bypassIfSynchronous;
     }
 
