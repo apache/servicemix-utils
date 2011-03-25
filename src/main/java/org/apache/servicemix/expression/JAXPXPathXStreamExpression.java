@@ -21,14 +21,14 @@ import javax.jbi.messaging.MessagingException;
 import javax.jbi.messaging.NormalizedMessage;
 import javax.xml.xpath.XPathConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.xml.DomReader;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 /**
@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JAXPXPathXStreamExpression extends JAXPXPathExpression {
 
-    protected Log logger = LogFactory.getLog(JAXPXPathXStreamExpression.class);
+    protected Logger logger = LoggerFactory.getLogger(JAXPXPathXStreamExpression.class);
     private XStream xStream;
 
     public JAXPXPathXStreamExpression() {

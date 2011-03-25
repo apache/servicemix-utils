@@ -27,11 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.servicemix.jdbc.JDBCAdapter;
 import org.apache.servicemix.jdbc.JDBCAdapterFactory;
 import org.apache.servicemix.jdbc.Statements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implements all the default JDBC operations that are used by the
@@ -50,7 +50,7 @@ import org.apache.servicemix.jdbc.Statements;
  */
 public class DefaultJDBCAdapter implements JDBCAdapter {
 
-    private static final Log LOG = LogFactory.getLog(DefaultJDBCAdapter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultJDBCAdapter.class);
 
     protected Statements statements;
 

@@ -23,10 +23,10 @@ import com.hazelcast.core.IdGenerator;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.servicemix.store.Entry;
 import org.apache.servicemix.store.Store;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -34,7 +34,7 @@ import org.apache.servicemix.store.Store;
  */
 public class HazelcastStore implements Store, Serializable {
 
-    private static final Log LOG = LogFactory.getLog(HazelcastStore.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HazelcastStore.class);
 
     private Map<String, Entry> datas;
 

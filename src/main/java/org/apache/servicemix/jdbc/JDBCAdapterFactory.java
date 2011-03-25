@@ -19,14 +19,14 @@ package org.apache.servicemix.jdbc;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.servicemix.finder.FactoryFinder;
 import org.apache.servicemix.jdbc.adapter.DefaultJDBCAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class JDBCAdapterFactory {
 
-    private static final Log LOG = LogFactory.getLog(JDBCAdapterFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JDBCAdapterFactory.class);
     private static FactoryFinder factoryFinder = new FactoryFinder("META-INF/services/org/apache/servicemix/jdbc/");
 
     private JDBCAdapterFactory() {

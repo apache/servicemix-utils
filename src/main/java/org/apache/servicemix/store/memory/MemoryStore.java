@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.servicemix.id.IdGenerator;
 import org.apache.servicemix.store.Store;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A simple memory store implementation based on a simple map.
@@ -33,7 +33,7 @@ import org.apache.servicemix.store.Store;
  */
 public class MemoryStore implements Store {
 
-    private static final Log LOG = LogFactory.getLog(MemoryStore.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MemoryStore.class);
 
     private Map<String, Object> datas = new ConcurrentHashMap<String, Object>();
 

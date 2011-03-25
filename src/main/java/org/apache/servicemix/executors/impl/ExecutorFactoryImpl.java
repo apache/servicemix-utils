@@ -18,6 +18,8 @@ package org.apache.servicemix.executors.impl;
 
 import org.apache.servicemix.executors.Executor;
 import org.apache.servicemix.executors.ExecutorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.management.ObjectName;
 import java.lang.reflect.Method;
@@ -43,7 +45,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ExecutorFactoryImpl implements ExecutorFactory {
 
-    private static final org.apache.commons.logging.Log LOG = org.apache.commons.logging.LogFactory.getLog(ExecutorFactoryImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExecutorFactoryImpl.class);
 
     private static final String OBJECT_NAME_PREFIX = "org.apache.servicemix:ContainerName=ServiceMix,Name=Executors,Type=";
     private static final String OBJECT_NAME_POSTFIX = ",SubType=";

@@ -34,8 +34,8 @@ import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.NormalizedMessage;
 
 import javax.xml.transform.stream.StreamSource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A simple flat file marshaler that can read fixed-length and csv text files
@@ -67,7 +67,7 @@ public class SimpleFlatFileMarshaler extends DefaultFileMarshaler {
     private static final String XML_CLOSE_ATTR_NEWLINE = "\">\n";
     private static final String XML_CLOSE_ATTR = "\">";
 
-    protected final Log log = LogFactory.getLog(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
     
     private boolean xmlDeclaration = true;
 

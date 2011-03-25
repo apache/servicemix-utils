@@ -28,25 +28,24 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class FragmentStreamReaderTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(FragmentStreamReaderTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FragmentStreamReaderTest.class);
 
     public void testStaxSource() throws Exception {
         InputStream is = getClass().getResourceAsStream("test.xml");
         XMLStreamReader xsr = XMLInputFactory.newInstance().createXMLStreamReader(is);
         xsr = new ExtendedXMLStreamReader(xsr);
         xsr.nextTag();
-        LOG.info(xsr.getName());
+        LOG.info(xsr.getName().toString());
         xsr.nextTag();
-        LOG.info(xsr.getName());
+        LOG.info(xsr.getName().toString());
         XMLStreamReader fsr = new FragmentStreamReader(xsr);
         StaxSource ss = new StaxSource(fsr);
         StringWriter buffer = new StringWriter();

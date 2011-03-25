@@ -28,13 +28,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * @author <a href="mailto:dan@envoisolutions.com">Dan Diephouse</a>
@@ -42,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class W3CDOMStreamReaderTest extends AbstractStreamReaderTest {
 
-    private static final Log LOG = LogFactory.getLog(W3CDOMStreamReaderTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(W3CDOMStreamReaderTest.class);
 
     public void testSingleElement() throws Exception {
         Document doc = getDocument();
@@ -100,7 +99,7 @@ public class W3CDOMStreamReaderTest extends AbstractStreamReaderTest {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         writeXml(doc, baos);
-        LOG.info(baos);
+        LOG.info(baos.toString());
 
         W3CDOMStreamReader reader = new W3CDOMStreamReader(e);
         testMixedContent(reader);

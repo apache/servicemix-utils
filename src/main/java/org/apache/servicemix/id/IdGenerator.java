@@ -21,11 +21,11 @@ package org.apache.servicemix.id;
  * http://svn.apache.org/repos/asf/incubator/activemq/trunk/activemq-core/src/main/java/org/apache/activemq/util/IdGenerator.java
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.InetAddress;
 import java.net.ServerSocket;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Generator for Globally unique Strings.
@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class IdGenerator {
 
-    private static final Log LOG = LogFactory.getLog(IdGenerator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IdGenerator.class);
 
     private static final String UNIQUE_STUB;
 

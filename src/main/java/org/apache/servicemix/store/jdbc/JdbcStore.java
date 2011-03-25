@@ -23,13 +23,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Connection;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.servicemix.store.Store;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JdbcStore implements Store {
 
-    private static final Log LOG = LogFactory.getLog(JdbcStore.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JdbcStore.class);
 
     private JdbcStoreFactory factory;
     private String name;

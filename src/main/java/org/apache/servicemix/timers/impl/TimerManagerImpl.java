@@ -19,15 +19,15 @@ package org.apache.servicemix.timers.impl;
 import java.util.Date;
 import java.util.TimerTask;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.servicemix.timers.Timer;
 import org.apache.servicemix.timers.TimerListener;
 import org.apache.servicemix.timers.TimerManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TimerManagerImpl implements TimerManager {
 
-    private static final Log LOG = LogFactory.getLog(TimerManagerImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TimerManagerImpl.class);
 
     private java.util.Timer timer;
 

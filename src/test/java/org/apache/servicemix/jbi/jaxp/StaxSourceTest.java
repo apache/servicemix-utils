@@ -31,18 +31,17 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class StaxSourceTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(StaxSourceTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StaxSourceTest.class);
 
     public void testStaxSourceOnStream() throws Exception {
         InputStream is = getClass().getResourceAsStream("test.xml");

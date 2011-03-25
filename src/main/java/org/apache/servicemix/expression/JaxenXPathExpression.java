@@ -25,12 +25,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 import org.xml.sax.SAXException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.servicemix.jbi.jaxp.SourceTransformer;
 import org.apache.servicemix.jbi.jaxp.StringSource;
 import org.jaxen.FunctionContext;
@@ -48,7 +48,7 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class JaxenXPathExpression implements Expression, InitializingBean {
     
-    private static final transient Log LOG = LogFactory.getLog(JaxenXPathExpression.class);
+    private static final transient Logger LOG = LoggerFactory.getLogger(JaxenXPathExpression.class);
 
     private String xpath;
 
