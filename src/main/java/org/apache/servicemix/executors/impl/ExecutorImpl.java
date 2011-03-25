@@ -33,21 +33,18 @@ public class ExecutorImpl implements Executor {
 
     private final ThreadPoolExecutor threadPool;
 
-    private final long shutdownDelay;
-
-    private final boolean bypassIfSynchronous;
-
     private ExecutorFactoryImpl executorFactory;
 
-    public ExecutorImpl(ExecutorFactoryImpl executorFactory, ThreadPoolExecutor threadPool, long shutdownDelay, boolean bypassIfSynchronous) {
+    private final ExecutorConfig config;
+
+    public ExecutorImpl(ExecutorFactoryImpl executorFactory, ThreadPoolExecutor threadPool, ExecutorConfig config) {
         this.executorFactory = executorFactory;
         this.threadPool = threadPool;
-        this.shutdownDelay = shutdownDelay;
-        this.bypassIfSynchronous = bypassIfSynchronous;
+        this.config = config;
     }
 
     public void execute(Runnable command) {
-        if (bypassIfSynchronous && command instanceof ExecutorAwareRunnable) {
+        if (config.isBypassIfSynchronous() && command instanceof ExecutorAwareRunnable) {
             if (((ExecutorAwareRunnable) command).shouldRunSynchronously()) {
                 command.run();
                 return;
@@ -63,11 +60,11 @@ public class ExecutorImpl implements Executor {
             // ignored
         }
         threadPool.shutdown();
-        if (!threadPool.isTerminated() && shutdownDelay > 0) {
+        if (!threadPool.isTerminated() && config.getShutdownDelay() > 0) {
             new Thread(new Runnable() {
                 public void run() {
                     try {
-                        if (!threadPool.awaitTermination(shutdownDelay, TimeUnit.MILLISECONDS)) {
+                        if (!threadPool.awaitTermination(config.getShutdownDelay(), TimeUnit.MILLISECONDS)) {
                             threadPool.shutdownNow();
                         }
                     } catch (InterruptedException e) {
@@ -90,5 +87,14 @@ public class ExecutorImpl implements Executor {
 
     public ThreadPoolExecutor getThreadPoolExecutor() {
         return this.threadPool;
+    }
+
+    /**
+     * The configuration used for creating this executor instance
+     *
+     * @return the configuration object
+     */
+    protected ExecutorConfig getConfig() {
+        return config;
     }
 }

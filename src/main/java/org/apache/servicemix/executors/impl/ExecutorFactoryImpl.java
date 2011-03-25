@@ -57,20 +57,24 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
     private Map<Executor, ObjectName>   executorNames   = new HashMap<Executor, ObjectName>();
 
     public Executor createExecutor(String id) {
-        ExecutorConfig config = getConfig(id);
-        ExecutorImpl executor = new ExecutorImpl(this, createService(id, config), config.getShutdownDelay(), config.isBypassIfSynchronous());
-        try {
-            registerMBean(id, executor, config);
-        } catch (Exception ex) {
-            LOG.error("Unable to register MBean for the executor with id " + id, ex);
-        }
-        return executor;
+        return doCreateExecutor(id, getConfig(id));
+    }
+
+    public Executor createExecutor(String id, Map<String, Object> configuration) {
+        return doCreateExecutor(id, ExecutorConfig.create(configuration, getConfig(id)));
     }
 
     public Executor createDaemonExecutor(String id) {
         ExecutorConfig config = getConfig(id);
         config.setThreadDaemon(true);
-        ExecutorImpl executor = new ExecutorImpl(this, createService(id, config), config.getShutdownDelay(), config.isBypassIfSynchronous());
+        return doCreateExecutor(id, config);
+    }
+
+    /**
+     * Create an executor with the given id and configuration
+     */
+    private Executor doCreateExecutor(String id, ExecutorConfig config) {
+        ExecutorImpl executor = new ExecutorImpl(this, createService(id, config), config);
         try {
             registerMBean(id, executor, config);
         } catch (Exception ex) {

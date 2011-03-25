@@ -16,6 +16,13 @@
  */
 package org.apache.servicemix.executors.impl;
 
+import org.apache.servicemix.converter.Converters;
+import org.apache.servicemix.executors.ExecutorFactory;
+
+import java.util.Map;
+
+import static org.apache.servicemix.executors.ExecutorFactory.*;
+
 /**
  * This bean holds configuration attributes for a given Executor.
  * 
@@ -92,7 +99,7 @@ public class ExecutorConfig {
      * @param corePoolSize
      *            the corePoolSize to set
      */
-    public void setCorePoolSize(int corePoolSize) {
+    public void setCorePoolSize(Integer corePoolSize) {
         this.corePoolSize = corePoolSize;
     }
 
@@ -107,7 +114,7 @@ public class ExecutorConfig {
      * @param keepAlive
      *            the keepAlive to set
      */
-    public void setKeepAliveTime(long keepAlive) {
+    public void setKeepAliveTime(Long keepAlive) {
         this.keepAliveTime = keepAlive;
     }
 
@@ -122,7 +129,7 @@ public class ExecutorConfig {
      * @param maximumPoolSize
      *            the maximumPoolSize to set
      */
-    public void setMaximumPoolSize(int maximumPoolSize) {
+    public void setMaximumPoolSize(Integer maximumPoolSize) {
         this.maximumPoolSize = maximumPoolSize;
     }
 
@@ -137,7 +144,7 @@ public class ExecutorConfig {
      * @param queueSize
      *            the queueSize to set
      */
-    public void setQueueSize(int queueSize) {
+    public void setQueueSize(Integer queueSize) {
         this.queueSize = queueSize;
     }
 
@@ -152,7 +159,7 @@ public class ExecutorConfig {
      * @param threadDaemon
      *            the threadDaemon to set
      */
-    public void setThreadDaemon(boolean threadDaemon) {
+    public void setThreadDaemon(Boolean threadDaemon) {
         this.threadDaemon = threadDaemon;
     }
 
@@ -167,7 +174,7 @@ public class ExecutorConfig {
      * @param threadPriority
      *            the threadPriority to set
      */
-    public void setThreadPriority(int threadPriority) {
+    public void setThreadPriority(Integer threadPriority) {
         this.threadPriority = threadPriority;
     }
 
@@ -182,7 +189,7 @@ public class ExecutorConfig {
      * @param shutdownDelay
      *            the shutdownDelay to set
      */
-    public void setShutdownDelay(long shutdownDelay) {
+    public void setShutdownDelay(Long shutdownDelay) {
         this.shutdownDelay = shutdownDelay;
     }
 
@@ -197,7 +204,7 @@ public class ExecutorConfig {
      * @param allowCoreThreadsTimeout
      *            the allowCoreThreadsTimeout to set
      */
-    public void setAllowCoreThreadsTimeout(boolean allowCoreThreadsTimeout) {
+    public void setAllowCoreThreadsTimeout(Boolean allowCoreThreadsTimeout) {
         this.allowCoreThreadsTimeout = allowCoreThreadsTimeout;
     }
 
@@ -211,7 +218,7 @@ public class ExecutorConfig {
     /**
      * @param bypassIfSynchronous if synchronous tasks should bypass the executor
      */
-    public void setBypassIfSynchronous(boolean bypassIfSynchronous) {
+    public void setBypassIfSynchronous(Boolean bypassIfSynchronous) {
         this.bypassIfSynchronous = bypassIfSynchronous;
     }
 
@@ -221,5 +228,31 @@ public class ExecutorConfig {
 
     public void setParent(ExecutorConfig parent) {
         this.parent = parent;
+    }
+
+    /**
+     * Create an ExecutorConfig instance based on the information in the options map.
+     *
+     * @param options the map of executor configuration options that will get set on the ExecutorConfig instance
+     * @param parent (optionally) the parent ExecutorConfig instance
+     * @return the configured instance
+     */
+    public static ExecutorConfig create(Map<String, Object> options, ExecutorConfig parent) {
+        Converters converter = new Converters();
+
+        ExecutorConfig result = new ExecutorConfig(false, parent);
+        result.setCorePoolSize(converter.as(options.get(CORE_POOL_SIZE), Integer.class));
+        result.setMaximumPoolSize(converter.as(options.get(MAXIMUM_POOL_SIZE), Integer.class));
+        result.setQueueSize(converter.as(options.get(QUEUE_SIZE), Integer.class));
+        result.setThreadPriority(converter.as(options.get(THREAD_PRIORITY), Integer.class));
+
+        result.setKeepAliveTime(converter.as(options.get(KEEP_ALIVE_TIME), Long.class));
+        result.setShutdownDelay(converter.as(options.get(SHUTDOWN_DELAY), Long.class));
+
+        result.setAllowCoreThreadsTimeout(converter.as(options.get(ALLOW_CORE_THREADS_TIMEOUT), Boolean.class));
+        result.setBypassIfSynchronous(converter.as(options.get(BYPASS_IF_SYNCHRONOUS), Boolean.class));
+        result.setThreadDaemon(converter.as(options.get(THREAD_DAEMON), Boolean.class));
+
+        return result;
     }
 }
