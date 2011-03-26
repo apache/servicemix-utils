@@ -75,11 +75,11 @@ public class DefaultFileMarshaler extends MarshalerSupport implements FileMarsha
         return asString(fileName.evaluate(exchange, message));
     }
 
-	public String getTempOutputName(MessageExchange exchange,
-			NormalizedMessage message) throws MessagingException {
-		Object retVal = tempFileName.evaluate(exchange, message);
-		return retVal == null ? null : asString(retVal);
-	}
+    public String getTempOutputName(MessageExchange exchange,
+            NormalizedMessage message) throws MessagingException {
+        Object retVal = tempFileName.evaluate(exchange, message);
+        return retVal == null ? null : asString(retVal);
+    }
     
     public void writeMessage(MessageExchange exchange, NormalizedMessage message, 
                              OutputStream out, String path) throws IOException, JBIException {

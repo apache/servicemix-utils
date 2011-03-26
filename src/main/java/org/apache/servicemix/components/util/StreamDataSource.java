@@ -27,7 +27,7 @@ import java.io.InputStream;
  */
 public class StreamDataSource extends org.apache.servicemix.util.jaf.StreamDataSource {
 
-	public StreamDataSource(InputStream in) {
+    public StreamDataSource(InputStream in) {
         super(in);
     }
 

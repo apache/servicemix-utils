@@ -165,14 +165,14 @@ class FactoryFinder {
 
                     ClassLoader classLoader = findClassLoader();
 
-			        try {
-			            // If we are deployed into an OSGi environment, leverage it
-			            Class spiClass = org.apache.servicemix.specs.locator.OsgiLocator.locate(iFactoryId);
-			            if (spiClass != null) {
-			                return spiClass.newInstance();
-			            }
-			        } catch (Throwable e) {
-			        }
+                    try {
+                        // If we are deployed into an OSGi environment, leverage it
+                        Class spiClass = org.apache.servicemix.specs.locator.OsgiLocator.locate(iFactoryId);
+                        if (spiClass != null) {
+                            return spiClass.newInstance();
+                        }
+                    } catch (Throwable e) {
+                    }
 
                     // Use the system property first
                     try {

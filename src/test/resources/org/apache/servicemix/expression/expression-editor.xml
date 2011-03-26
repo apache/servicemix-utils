@@ -20,7 +20,7 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
 
-	<bean id="ExpressionTestSupport" class="org.apache.servicemix.expression.ExpressionTestSupport">
-		<property name="expression"><value>test</value></property>
-	</bean>
+    <bean id="ExpressionTestSupport" class="org.apache.servicemix.expression.ExpressionTestSupport">
+        <property name="expression"><value>test</value></property>
+    </bean>
 </beans>
