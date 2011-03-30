@@ -120,7 +120,7 @@ public class ExecutorFactoryImpl implements ExecutorFactory {
         ThreadPoolExecutor service = new ThreadPoolExecutor(config.getCorePoolSize(),
                 config.getMaximumPoolSize() < 0 ? Integer.MAX_VALUE : config.getMaximumPoolSize(), config
                 .getKeepAliveTime(), TimeUnit.MILLISECONDS, queue, factory, handler);
-        if (config.isAllowCoreThreadsTimeout()) {
+        if (config.isAllowCoreThreadTimeOut()) {
             try {
                 Method mth = service.getClass().getMethod("allowCoreThreadTimeOut", new Class[]{boolean.class});
                 mth.invoke(service, new Object[]{Boolean.TRUE});

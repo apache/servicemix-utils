@@ -56,7 +56,7 @@ public class ExecutorConfig {
 
     private Long shutdownDelay;
 
-    private Boolean allowCoreThreadsTimeout;
+    private Boolean allowCoreThreadTimeOut;
 
     private Boolean bypassIfSynchronous;
 
@@ -80,7 +80,7 @@ public class ExecutorConfig {
             setShutdownDelay(DEFAULT_SHUTDOWN_DELAY);
             setThreadDaemon(DEFAULT_THREAD_DAEMON);
             setThreadPriority(DEFAULT_THREAD_PRIORITY);
-            setAllowCoreThreadsTimeout(DEFAULT_ALLOW_CORE_THREAD_TIMEOUT);
+            setAllowCoreThreadTimeOut(DEFAULT_ALLOW_CORE_THREAD_TIMEOUT);
             setBypassIfSynchronous(DEFAULT_BYPASS_IF_SYNCHRONOUS);
             setCorePoolSize(DEFAULT_CORE_POOL_SIZE);
             setKeepAliveTime(DEFAULT_KEEP_ALIVE_TIME);
@@ -194,18 +194,18 @@ public class ExecutorConfig {
     }
 
     /**
-     * @return the allowCoreThreadsTimeout
+     * @return the allowCoreThreadTimeOut
      */
-    public Boolean isAllowCoreThreadsTimeout() {
-        return getParent() != null && allowCoreThreadsTimeout == null ? getParent().isAllowCoreThreadsTimeout() : allowCoreThreadsTimeout;
+    public Boolean isAllowCoreThreadTimeOut() {
+        return getParent() != null && allowCoreThreadTimeOut == null ? getParent().isAllowCoreThreadTimeOut() : allowCoreThreadTimeOut;
     }
 
     /**
-     * @param allowCoreThreadsTimeout
-     *            the allowCoreThreadsTimeout to set
+     * @param allowCoreThreadTimeOut
+     *            the allowCoreThreadTimeOut to set
      */
-    public void setAllowCoreThreadsTimeout(Boolean allowCoreThreadsTimeout) {
-        this.allowCoreThreadsTimeout = allowCoreThreadsTimeout;
+    public void setAllowCoreThreadTimeOut(Boolean allowCoreThreadTimeOut) {
+        this.allowCoreThreadTimeOut = allowCoreThreadTimeOut;
     }
 
     /**
@@ -249,7 +249,7 @@ public class ExecutorConfig {
         result.setKeepAliveTime(converter.as(options.get(KEEP_ALIVE_TIME), Long.class));
         result.setShutdownDelay(converter.as(options.get(SHUTDOWN_DELAY), Long.class));
 
-        result.setAllowCoreThreadsTimeout(converter.as(options.get(ALLOW_CORE_THREADS_TIMEOUT), Boolean.class));
+        result.setAllowCoreThreadTimeOut(converter.as(options.get(ALLOW_CORE_THREADS_TIMEOUT), Boolean.class));
         result.setBypassIfSynchronous(converter.as(options.get(BYPASS_IF_SYNCHRONOUS), Boolean.class));
         result.setThreadDaemon(converter.as(options.get(THREAD_DAEMON), Boolean.class));
 

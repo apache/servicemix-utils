@@ -44,7 +44,7 @@ public interface ManagedExecutorMBean {
 
     int getQueueSize();
 
-    boolean isAllowCoreThreadTimeout();
+    boolean isAllowCoreThreadTimeOut();
 
     long getNumberOfRejectedExecutions();
 

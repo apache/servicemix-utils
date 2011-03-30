@@ -31,7 +31,7 @@ public interface ExecutorFactory {
      * Configuration properties than can be passed along when creating an executor.
      * Every ExecutorFactory implementation can support one or more of these options, ignoring the unsupported ones.
      */
-    String ALLOW_CORE_THREADS_TIMEOUT = ExecutorFactory.class.getName() + ".AllowCoreThreadsTimeout";
+    String ALLOW_CORE_THREADS_TIMEOUT = ExecutorFactory.class.getName() + ".AllowCoreThreadTimeOut";
     String BYPASS_IF_SYNCHRONOUS = ExecutorFactory.class.getName() + ".BypassIfSynchronous";
     String CORE_POOL_SIZE = ExecutorFactory.class.getName() + ".CorePoolSize";
     String KEEP_ALIVE_TIME = ExecutorFactory.class.getName() + ".KeepAliveTime";

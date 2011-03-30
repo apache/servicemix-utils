@@ -41,7 +41,7 @@ public class ExecutorFactoryImplTest {
         defaultConfig.setCorePoolSize(1);
         defaultConfig.setMaximumPoolSize(2);
         defaultConfig.setQueueSize(3);
-        defaultConfig.setAllowCoreThreadsTimeout(true);
+        defaultConfig.setAllowCoreThreadTimeOut(true);
         factory.setDefaultConfig(defaultConfig);
     }
 

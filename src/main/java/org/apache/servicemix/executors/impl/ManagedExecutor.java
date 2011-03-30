@@ -102,7 +102,7 @@ public class ManagedExecutor extends javax.management.StandardMBean implements E
         return this.internalExecutor != null ? this.internalExecutor.size() : 0;
     }
 
-    public boolean isAllowCoreThreadTimeout() {
+    public boolean isAllowCoreThreadTimeOut() {
         if (this.internalExecutor != null) {
             ThreadPoolExecutor executor = this.internalExecutor.getThreadPoolExecutor();
             try {

@@ -49,7 +49,7 @@ public class ExecutorConfigTest {
         assertEquals(new Long(3000), config.getKeepAliveTime());
         assertEquals(new Long(9000), config.getShutdownDelay());
         assertEquals(new Integer(9), config.getThreadPriority());
-        assertEquals(true, config.isAllowCoreThreadsTimeout());
+        assertEquals(true, config.isAllowCoreThreadTimeOut());
         assertEquals(false, config.isBypassIfSynchronous());
         assertEquals(true, config.isThreadDaemon());
     }
@@ -74,7 +74,7 @@ public class ExecutorConfigTest {
         assertEquals(new Long(3000), config.getKeepAliveTime());
         assertEquals(new Long(9000), config.getShutdownDelay());
         assertEquals(new Integer(9), config.getThreadPriority());
-        assertEquals(true, config.isAllowCoreThreadsTimeout());
+        assertEquals(true, config.isAllowCoreThreadTimeOut());
         assertEquals(false, config.isBypassIfSynchronous());
         assertEquals(true, config.isThreadDaemon());
     }
@@ -99,7 +99,7 @@ public class ExecutorConfigTest {
         assertEquals(new Long(3000), config.getKeepAliveTime());
         assertEquals(new Long(9000), config.getShutdownDelay());
         assertEquals(new Integer(9), config.getThreadPriority());
-        assertEquals(true, config.isAllowCoreThreadsTimeout());
+        assertEquals(true, config.isAllowCoreThreadTimeOut());
         assertEquals(false, config.isBypassIfSynchronous());
         assertEquals(true, config.isThreadDaemon());
     }
