@@ -25,12 +25,13 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.servicemix.store.Store;
+import org.apache.servicemix.store.StoreFactory;
 
 
 /**
  * @author iocanel
  */
-public class HazelcastStoreFactory {
+public class HazelcastStoreFactory implements StoreFactory {
 
     private Map<String, HazelcastStore> stores;
 
