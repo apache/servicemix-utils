@@ -150,6 +150,12 @@
             <artifactId>hazelcast</artifactId>
             <version>1.9.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.idevlab</groupId>
+            <artifactId>rjc</artifactId>
+            <version>0.6.4</version>
+        </dependency>
+
         <!-- test dependencies -->
         <dependency>
             <groupId>junit</groupId>
