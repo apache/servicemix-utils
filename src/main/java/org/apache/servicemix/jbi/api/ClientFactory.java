@@ -30,7 +30,7 @@ public interface ClientFactory {
     /**
      * Default location to where the object should be looked for in JNDI
      */
-    String DEFAULT_JNDI_NAME = "java:comp/env/jbi/ClientFactory";
+    String DEFAULT_JNDI_NAME = "org/apache/servicemix/jbi/ClientFactory";
     
     /**
      * Create a new client to interact with the JBI bus
