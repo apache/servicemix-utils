@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 
 import javax.jbi.messaging.MessagingException;
@@ -59,6 +60,8 @@ public class SourceTransformer {
 
     public static final String DEFAULT_CHARSET_PROPERTY = "org.apache.servicemix.default.charset";
     public static final String DEFAULT_VALIDATING_DTD_PROPERTY = "org.apache.servicemix.default.validating-dtd";
+    private static ThreadLocal<WeakReference<DocumentBuilder>> docBuilderCache = new ThreadLocal<WeakReference<DocumentBuilder>>();
+    private static ThreadLocal<WeakReference<TransformerFactory>> transformerFactoryCache = new ThreadLocal<WeakReference<TransformerFactory>>();
 
     /*
      * When converting a DOM tree to a SAXSource, we try to use Xalan internal
@@ -81,8 +84,7 @@ public class SourceTransformer {
 
     private DocumentBuilderFactory documentBuilderFactory;
 
-    private TransformerFactory transformerFactory;
-
+    	
     public SourceTransformer() {
     }
 
@@ -484,33 +486,53 @@ public class SourceTransformer {
     }
 
     public DocumentBuilder createDocumentBuilder() throws ParserConfigurationException {
-        DocumentBuilderFactory factory = getDocumentBuilderFactory();
-        return factory.newDocumentBuilder();
+        WeakReference<DocumentBuilder> cachedDocBuilder = docBuilderCache.get();
+
+        DocumentBuilder docBuilder = null;
+        if (cachedDocBuilder != null) {
+            docBuilder = cachedDocBuilder.get();
+        }
+
+        if (docBuilder == null) {
+            docBuilder = getDocumentBuilderFactory().newDocumentBuilder();            
+            docBuilderCache.set(new WeakReference<DocumentBuilder>(docBuilder));
+        }
+
+        return docBuilder;
     }
 
     public Document createDocument() throws ParserConfigurationException {
         DocumentBuilder builder = createDocumentBuilder();
         return builder.newDocument();
     }
-
-    public TransformerFactory getTransformerFactory() {
-        if (transformerFactory == null) {
-            transformerFactory = createTransformerFactory();
-        }
-        return transformerFactory;
-    }
-
-    public void setTransformerFactory(TransformerFactory transformerFactory) {
-        this.transformerFactory = transformerFactory;
-    }
-
+    
     public Transformer createTransfomer() throws TransformerConfigurationException {
-        TransformerFactory factory = getTransformerFactory();
-        return factory.newTransformer();
+        return createTransformerFactory().newTransformer();
+    }
+    
+    public TransformerFactory createTransformerFactory() {        
+        WeakReference<TransformerFactory> cachedFactory = transformerFactoryCache.get();
+
+        TransformerFactory factory = null;
+        if (cachedFactory != null) {
+            factory = cachedFactory.get();
+        }
+
+        if (factory == null) {
+            factory = TransformerFactory.newInstance();
+            transformerFactoryCache.set(new WeakReference<TransformerFactory>(factory));
+        }
+
+        return factory;        
+    }
+    
+    public TransformerFactory getTransformerFactory() {
+    	return createTransformerFactory();
+    }
+    	 
+    public void setTransformerFactory(TransformerFactory transformerFactory) {
+    	transformerFactoryCache.set(new WeakReference<TransformerFactory>(transformerFactory));
     }
 
-    public TransformerFactory createTransformerFactory() {
-        return TransformerFactory.newInstance();
-    }
-
+    
 }
