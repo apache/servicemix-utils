@@ -37,6 +37,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.servicemix.jbi.jaxp.StAXSourceTransformer;
 import org.xml.sax.SAXException;
 
 import org.apache.servicemix.jbi.jaxp.SourceTransformer;
@@ -45,8 +46,7 @@ import org.apache.servicemix.util.FileUtil;
 import org.apache.servicemix.util.jaf.ByteArrayDataSource;
 
 /**
- * @author gnodet
- * @version $Revision: 376451 $
+ * Util class to manipulate message.
  */
 public final class MessageUtil {
     
@@ -143,7 +143,7 @@ public final class MessageUtil {
         if (message.getContent() instanceof StreamSource
                 || message.getContent() instanceof SAXSource) {
             try {
-                String content = new SourceTransformer().contentToString(message);
+                String content = new StAXSourceTransformer().contentToString(message);
                 if (content != null) {
                     message.setContent(new StringSource(content));
                 }
