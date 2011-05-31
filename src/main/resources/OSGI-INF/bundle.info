@@ -1,0 +1,20 @@
+\u001B[1mSYNOPSIS\u001B[0m
+    ${project.description}
+
+    Original Maven URL:
+        \u001B[33mmvn:${project.groupId}/${project.artifactId}/${project.version}\u001B[0m
+
+\u001B[1mDESCRIPTION\u001B[0m
+    Apache ServiceMix Utils provides a set of utility classes used in a wide ServiceMix modules.
+
+    You can find the different store implementations supported by ServiceMix, such as:
+           * Hazelcast
+           * JDBC
+           * Memory
+           * MongoDB
+           * Redis
+
+    You can also find some marshalers and converters used in the components.
+
+\u001B[1mSEE ALSO\u001B[0m
+    \u001B[36mhttp://servicemix.apache.org/\u001B[0m
