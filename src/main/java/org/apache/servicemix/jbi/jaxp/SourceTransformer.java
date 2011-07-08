@@ -27,9 +27,14 @@ import java.lang.reflect.Constructor;
 
 import javax.jbi.messaging.MessagingException;
 import javax.jbi.messaging.NormalizedMessage;
+import javax.xml.crypto.dsig.Transform;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -43,6 +48,7 @@ import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.jaxen.function.ext.EndsWithFunction;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -62,6 +68,8 @@ public class SourceTransformer {
     public static final String DEFAULT_VALIDATING_DTD_PROPERTY = "org.apache.servicemix.default.validating-dtd";
     private static ThreadLocal<WeakReference<DocumentBuilder>> docBuilderCache = new ThreadLocal<WeakReference<DocumentBuilder>>();
     private static ThreadLocal<WeakReference<TransformerFactory>> transformerFactoryCache = new ThreadLocal<WeakReference<TransformerFactory>>();
+    private XMLInputFactory inputFactory;
+    private XMLOutputFactory outputFactory;
 
     /*
      * When converting a DOM tree to a SAXSource, we try to use Xalan internal
@@ -185,6 +193,8 @@ public class SourceTransformer {
             return toDOMSourceFromSAX((SAXSource) source);
         } else if (source instanceof StreamSource) {
             return toDOMSourceFromStream((StreamSource) source);
+        } else if (source instanceof StaxSource) {
+            return toDOMSourceFromStax((StaxSource) source);
         } else {
             return null;
         }
@@ -194,6 +204,13 @@ public class SourceTransformer {
                     IOException, SAXException {
         Node node = toDOMNode(message);
         return new DOMSource(node);
+    }
+
+    public Source toDOMSource(StaxSource source) throws ParserConfigurationException, IOException, SAXException, TransformerException {
+        Transformer transformer = createTransfomer();
+        DOMResult result = new DOMResult();
+        transformer.transform(source, result);
+        return new DOMSource(result.getNode(), result.getSystemId());
     }
 
     /**
@@ -208,6 +225,8 @@ public class SourceTransformer {
             return toSAXSourceFromDOM((DOMSource) source);
         } else if (source instanceof StreamSource) {
             return toSAXSourceFromStream((StreamSource) source);
+        } else if (source instanceof StaxSource) {
+            return toSAXSourceFromStax((StaxSource) source);
         } else {
             return null;
         }
@@ -256,6 +275,10 @@ public class SourceTransformer {
         return new SAXSource(inputSource);
     }
 
+    public SAXSource toSAXSourceFromStax(StaxSource source) {
+        return (SAXSource) source;
+    }
+
     public Reader toReaderFromSource(Source src) throws TransformerException {
         StreamSource stSrc = toStreamSource(src);
         Reader r = stSrc.getReader();
@@ -283,6 +306,13 @@ public class SourceTransformer {
             }
         }
         return new DOMSource(document, systemId);
+    }
+
+    public DOMSource toDOMSourceFromStax(StaxSource source) throws TransformerException {
+        Transformer transformer = createTransfomer();
+        DOMResult result = new DOMResult();
+        transformer.transform(source, result);
+        return new DOMSource(result.getNode(), result.getSystemId());
     }
 
     public SAXSource toSAXSourceFromDOM(DOMSource source) throws TransformerException {
@@ -461,6 +491,46 @@ public class SourceTransformer {
         }
     }
 
+    /**
+     * Converts the source instance to a StaxSource or returns null if the
+     * conversion is not supported (making it easy to derive from this class
+     * to add new kinds of conversion).
+     *
+     * @param source the source
+     * @return the converted StaxSource
+     * @throws XMLStreamException
+     */
+    public StaxSource toStaxSource(Source source) throws XMLStreamException {
+        if (source instanceof StaxSource) {
+            return (StaxSource) source;
+        } else {
+            XMLInputFactory factory = getInputFactory();
+            XMLStreamReader reader = factory.createXMLStreamReader(source);
+            return new StaxSource(reader);
+        }
+    }
+
+    public XMLStreamReader toXMLStreamReader(Source source) throws XMLStreamException, TransformerException {
+        if (source instanceof StaxSource) {
+            return ((StaxSource) source).getXMLStreamReader();
+        }
+        // It seems that woodstox 2.9.3 throws some NPE in the servicemix-soap
+        // when using DOM, so use our own dom / stax parser
+        if (source instanceof DOMSource) {
+            Node n = ((DOMSource) source).getNode();
+            Element el = n instanceof Document ? ((Document) n).getDocumentElement() : n instanceof Element ? (Element) n : null;
+            if (el != null) {
+                return new W3CDOMStreamReader(el);
+            }
+        }
+        XMLInputFactory factory = getInputFactory();
+        try {
+            return factory.createXMLStreamReader(source);
+        } catch (XMLStreamException e) {
+            return factory.createXMLStreamReader(toReaderFromSource(source));
+        }
+    }
+
     // Properties
     // -------------------------------------------------------------------------
     public DocumentBuilderFactory getDocumentBuilderFactory() {
@@ -534,5 +604,34 @@ public class SourceTransformer {
     	transformerFactoryCache.set(new WeakReference<TransformerFactory>(transformerFactory));
     }
 
-    
+    public XMLInputFactory getInputFactory() {
+        if (inputFactory == null) {
+            inputFactory = createInputFactory();
+        }
+        return inputFactory;
+    }
+
+    public void setInputFactory(XMLInputFactory inputFactory) {
+        this.inputFactory = inputFactory;
+    }
+
+    public XMLOutputFactory getOutputFactory() {
+        if (outputFactory == null) {
+            outputFactory = createOutputFactory();
+        }
+        return outputFactory;
+    }
+
+    public void setOutputFactory(XMLOutputFactory outputFactory) {
+        this.outputFactory = outputFactory;
+    }
+
+    protected XMLInputFactory createInputFactory() {
+        return XMLInputFactory.newInstance();
+    }
+
+    protected XMLOutputFactory createOutputFactory() {
+        return XMLOutputFactory.newInstance();
+    }
+
 }

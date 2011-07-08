@@ -90,7 +90,7 @@ public class StaxSourceTest extends TestCase {
         InputStream is = getClass().getResourceAsStream("test.xml");
         XMLStreamReader xsr = XMLInputFactory.newInstance().createXMLStreamReader(is);
         StaxSource ss = new StaxSource(xsr);
-        DOMSource src = new SourceTransformer().toDOMSource(ss);
+        DOMSource src = (DOMSource) new SourceTransformer().toDOMSource(ss);
         assertNotNull(src);
         assertNotNull(src.getNode());
         checkDomResult((Document) src.getNode());

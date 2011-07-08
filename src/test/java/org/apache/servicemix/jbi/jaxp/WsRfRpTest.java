@@ -32,7 +32,7 @@ public class WsRfRpTest extends TestCase {
     public void test() throws Exception {
         JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
         Source source = new JAXBSource(context, new ObjectFactory().createGetResourceProperty(new QName("urn", "local")));
-        XMLStreamReader reader = new StAXSourceTransformer().toXMLStreamReader(source);
+        XMLStreamReader reader = new SourceTransformer().toXMLStreamReader(source);
         reader.nextTag();
         source = new StaxSource(new FragmentStreamReader(reader));
 
