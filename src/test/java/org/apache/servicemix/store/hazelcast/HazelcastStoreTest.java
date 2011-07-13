@@ -17,6 +17,7 @@
 
 package org.apache.servicemix.store.hazelcast;
 
+import com.hazelcast.config.Config;
 import org.apache.servicemix.store.Entry;
 import java.util.Map;
 import com.hazelcast.core.Hazelcast;
@@ -34,11 +35,17 @@ public class HazelcastStoreTest extends TestCase {
     private static final long TIMEOUT = 250L; 
 
     private Store store;
+    private Config config = new Config();
+
+
     private final HazelcastStoreFactory factory = new HazelcastStoreFactory();
-    private HazelcastInstance hazelcastInstance = Hazelcast.newHazelcastInstance(null);
+    private HazelcastInstance hazelcastInstance=null;
     
     public HazelcastStoreTest() {
         super();
+        config.getGroupConfig().setName("testgroup");
+        config.getGroupConfig().setPassword("testpwd");
+        this.hazelcastInstance =  Hazelcast.newHazelcastInstance(config);
         factory.setTimeout(TIMEOUT);
         factory.setHazelcastInstance(hazelcastInstance);
     }
@@ -71,7 +78,7 @@ public class HazelcastStoreTest extends TestCase {
     
     public void testDistributesStoreAndLoad() throws Exception {        
         //Create a new Hazelcast instance
-        HazelcastInstance instance = Hazelcast.newHazelcastInstance(null);
+        HazelcastInstance instance = Hazelcast.newHazelcastInstance(config);
         Map map = instance.getMap(HazelcastStoreFactory.STORE_PREFIX+".test");
         
         String id = "testId";
