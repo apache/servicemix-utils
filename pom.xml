@@ -155,7 +155,11 @@
             <artifactId>rjc</artifactId>
             <version>0.6.4</version>
         </dependency>
-
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>1.5.0</version>
+        </dependency>
         <!-- test dependencies -->
         <dependency>
             <groupId>junit</groupId>
