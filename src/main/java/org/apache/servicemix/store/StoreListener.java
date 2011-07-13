@@ -16,23 +16,31 @@
  */
 package org.apache.servicemix.store;
 
-import java.io.IOException;
-
-public interface StoreFactory  {
-
-    /**
-     * Opens a {@link Store} with the specified name.
-     * @param name
-     * @return
-     * @throws IOException
-     */
-    Store open(String name) throws IOException;
+/**
+ * A listener interface for {@link Store} implementations.
+ * @author: iocanel
+ */
+public interface StoreListener {
 
     /**
-     * Closes a {@link Store} with the specified name,
-     * @param store
-     * @throws IOException
+     * Method that is called each time an item is added.
+     * @param id
+     * @param data
      */
-    void close(Store store) throws IOException;
-    
+    public void onAdd(String id, Object data);
+
+    /**
+     * Method that is called each time an item is removed.
+     * @param id
+     * @param data
+     */
+    public void onRemove(String id, Object data);
+
+    /**
+     * Method that is called each time an item is evicted.
+     * Please note that not all {@link Store}s support eviction.
+     * @param id
+     * @param data
+     */
+    public void onEvict(String id, Object data);
 }

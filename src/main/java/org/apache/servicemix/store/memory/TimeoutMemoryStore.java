@@ -46,6 +46,7 @@ public class TimeoutMemoryStore extends MemoryStore {
     public void store(String id, Object data) throws IOException {
         LOG.debug("Storing object with id: " + id);
         datas.put(id, new Entry(data));
+        fireAddedEvent(id,data);
     }
 
     /**
@@ -58,7 +59,11 @@ public class TimeoutMemoryStore extends MemoryStore {
         evict();
         LOG.debug("Loading object with id:" + id);
         Entry entry = datas.remove(id);
-        return entry == null ? null : entry.getTime();
+        if(entry != null) {
+            Object data = entry.getData();
+            fireRemovedEvent(id,data);
+            return data;
+        } else return null;
     }
 
     private void evict() {
@@ -67,6 +72,10 @@ public class TimeoutMemoryStore extends MemoryStore {
             long age = now - datas.get(key).getTime();
             if (age > timeout) {
                 LOG.debug("Removing object with id " + key + " from store after " + age + " ms");
+                Entry entry = datas.get(key);
+                if(entry != null) {
+                    fireEvictedEvent(key,entry.getData());
+                }
                 datas.remove(key);
             }
         }

@@ -20,6 +20,8 @@ import com.mongodb.DB;
 import com.mongodb.Mongo;
 import org.apache.servicemix.store.Store;
 import org.apache.servicemix.store.StoreFactory;
+import org.apache.servicemix.store.StoreListener;
+import org.apache.servicemix.store.base.BaseStoreFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,7 +35,7 @@ import java.util.Map;
  * @author iocanel
  * @author jbonofre
  */
-public class MongoStoreFactory implements StoreFactory {
+public class MongoStoreFactory extends BaseStoreFactory {
 
     private Mongo mongo;
     private DB db;
@@ -82,6 +84,10 @@ public class MongoStoreFactory implements StoreFactory {
             if (timeout != null)
                 store = new MongoStore(db, collection, timeout);
             else store = new MongoStore(db, collection);
+
+             for(StoreListener listener:storeListeners) {
+                store.addListener(listener);
+            }
             stores.put(key, store);
         }
         return store;

@@ -14,25 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.servicemix.store;
+package org.apache.servicemix.store.base;
 
-import java.io.IOException;
+import org.apache.servicemix.store.StoreFactory;
+import org.apache.servicemix.store.StoreListener;
 
-public interface StoreFactory  {
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-    /**
-     * Opens a {@link Store} with the specified name.
-     * @param name
-     * @return
-     * @throws IOException
-     */
-    Store open(String name) throws IOException;
+/**
+ * @author: iocanel
+ */
+public abstract class BaseStoreFactory implements StoreFactory {
 
-    /**
-     * Closes a {@link Store} with the specified name,
-     * @param store
-     * @throws IOException
-     */
-    void close(Store store) throws IOException;
-    
+    protected Set<StoreListener> storeListeners = new LinkedHashSet<StoreListener>();
+
+    public Set<StoreListener> getStoreListeners() {
+        return storeListeners;
+    }
+
+    public void setStoreListeners(Set<StoreListener> storeListeners) {
+        this.storeListeners = storeListeners;
+    }
 }

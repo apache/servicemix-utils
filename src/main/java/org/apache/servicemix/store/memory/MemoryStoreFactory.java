@@ -23,6 +23,8 @@ import java.util.Map;
 import org.apache.servicemix.id.IdGenerator;
 import org.apache.servicemix.store.Store;
 import org.apache.servicemix.store.StoreFactory;
+import org.apache.servicemix.store.StoreListener;
+import org.apache.servicemix.store.base.BaseStoreFactory;
 
 /**
  * {@link StoreFactory} for creating memory-based {@link Store} implementations
@@ -30,7 +32,7 @@ import org.apache.servicemix.store.StoreFactory;
  * If a timeout has been specified, a {@link TimeoutMemoryStore} will be created,
  * otherwise the factory will build a plain {@link MemoryStore}
  */
-public class MemoryStoreFactory implements StoreFactory {
+public class MemoryStoreFactory extends BaseStoreFactory {
 
     private IdGenerator idGenerator = new IdGenerator();
     private Map<String, MemoryStore> stores = new HashMap<String, MemoryStore>();
@@ -46,6 +48,10 @@ public class MemoryStoreFactory implements StoreFactory {
                 store = new MemoryStore(idGenerator);
             } else {
                 store = new TimeoutMemoryStore(idGenerator, timeout);
+            }
+
+            for(StoreListener listener:storeListeners) {
+                store.addListener(listener);
             }
             stores.put(name, store);
         }

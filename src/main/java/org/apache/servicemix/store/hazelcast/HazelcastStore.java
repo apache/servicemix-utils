@@ -21,10 +21,10 @@ import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IdGenerator;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Map;
+
+import org.apache.servicemix.store.base.BaseStore;
 import org.apache.servicemix.store.Entry;
-import org.apache.servicemix.store.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author iocanel
  */
-public class HazelcastStore implements Store, Serializable {
+public class HazelcastStore extends BaseStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(HazelcastStore.class);
 
@@ -106,6 +106,7 @@ public class HazelcastStore implements Store, Serializable {
     public void store(String id, Object data) throws IOException {
         LOG.debug("Storing object with id: " + id);
         datas.put(id, new Entry(data));
+        fireAddedEvent(id,data);
     }
 
     /**
@@ -138,7 +139,10 @@ public class HazelcastStore implements Store, Serializable {
             evict();
         }
         Entry entry = datas.remove(id);
-        return entry != null ? entry.getData() : null;
+        if(entry != null) {
+          fireRemovedEvent(id,entry.getData());
+            return entry.getData();
+        } else return null;
     }
 
     /**
@@ -163,7 +167,12 @@ public class HazelcastStore implements Store, Serializable {
             long age = now - datas.get(key).getTime();
             if (age > timeout) {
                 LOG.debug("Removing object with id " + key + " from store after " + age + " ms");
+                Entry entry = datas.get(key);
                 datas.remove(key);
+
+                if(entry != null) {
+                    fireEvictedEvent(key,entry.getData());
+                }
             }
         }
     }

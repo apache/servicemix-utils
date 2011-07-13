@@ -17,7 +17,8 @@
 package org.apache.servicemix.store.mongo;
 
 import com.mongodb.*;
-import org.apache.servicemix.store.Store;
+import org.apache.servicemix.store.base.BaseStore;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
@@ -29,7 +30,9 @@ import java.io.*;
  * @author iocanel
  * @author jbonofre
  */
-public class MongoStore implements Store {
+public class MongoStore extends BaseStore {
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(MongoStore.class);
 
     private static final String ID = "_id";
     private static final String DATA = "data";
@@ -94,22 +97,29 @@ public class MongoStore implements Store {
      */
     public void store(String id, Object data) throws IOException {
         DBObject object = new BasicDBObject();
+        ObjectOutputStream out=null;
         try {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            ObjectOutputStream out = new ObjectOutputStream(buffer);
+            out = new ObjectOutputStream(buffer);
             out.writeObject(data);
-            out.close();
+
             object.put(ID, id);
             object.put(DATA, buffer.toByteArray());
             object.put(TIMESTAMP, System.currentTimeMillis());
         } catch (Exception e) {
             throw (IOException) new IOException("Error storing object").initCause(e);
+        } finally {
+            if(out != null) {
+                out.close();
+            }
         }
         WriteResult result = collection.insert(object);
         // check result for errors
         if (result.getError() != null) {
             throw new IOException(result.getError());
         }
+
+        fireAddedEvent(id,data);
     }
 
     /**
@@ -155,8 +165,13 @@ public class MongoStore implements Store {
             byte[] data = (byte[]) item.get(DATA);
             if (data != null) {
                 ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-                obj = ois.readObject();
+                try {
+                    obj = ois.readObject();
+                } finally {
+                    ois.close();
+                }
             }
+            fireRemovedEvent(id,data);
         } catch (Exception e) {
             throw (IOException) new IOException("Error loading object").initCause(e);
         }
@@ -182,7 +197,11 @@ public class MongoStore implements Store {
             byte[] data = (byte[]) item.get(DATA);
             if (data != null) {
                 ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
-                obj = ois.readObject();
+                try {
+                    obj = ois.readObject();
+                } finally {
+                ois.close();
+                }
             }
         } catch (Exception e) {
             throw (IOException) new IOException("Error loading object").initCause(e);
@@ -199,7 +218,48 @@ public class MongoStore implements Store {
         if (timeout != null) {
             DBObject object = new BasicDBObject();
             object.put(TIMESTAMP, new BasicDBObject("&lt", System.currentTimeMillis() - timeout));
-            collection.remove(object);
+            DBCursor items = collection.find(object);
+            WriteResult result = collection.remove(object);
+
+            for (DBObject item : items) {
+                String id = null;
+                Object data = null;
+                if (item != null) {
+
+                    byte[] idBytes = (byte[]) item.get(ID);
+                    byte[] dataBytes = (byte[]) item.get(DATA);
+
+                    if (data != null) {
+                        try {
+                            ObjectInputStream ois = null;
+
+                            ois = new ObjectInputStream(new ByteArrayInputStream(idBytes));
+                            try {
+                                id = (String) ois.readObject();
+                            } finally {
+                                ois.close();
+                            }
+
+                            ois = new ObjectInputStream(new ByteArrayInputStream(dataBytes));
+                            try {
+                                data = ois.readObject();
+                                ois.close();
+                            } finally {
+                                ois.close();
+                            }
+
+                            if(id != null) {
+                                fireEvictedEvent(id,data);
+                            }
+
+                        } catch (IOException e) {
+                            LOG.error("Error evicting object from store",e);
+                        } catch (ClassNotFoundException e) {
+                            LOG.error("Error evicting object from store",e);
+                        }
+                    }
+                }
+            }
         }
     }
 }

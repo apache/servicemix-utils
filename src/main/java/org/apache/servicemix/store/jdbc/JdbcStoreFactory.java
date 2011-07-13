@@ -29,9 +29,10 @@ import org.apache.servicemix.jdbc.JDBCAdapter;
 import org.apache.servicemix.jdbc.JDBCAdapterFactory;
 import org.apache.servicemix.jdbc.Statements;
 import org.apache.servicemix.store.Store;
-import org.apache.servicemix.store.StoreFactory;
+import org.apache.servicemix.store.StoreListener;
+import org.apache.servicemix.store.base.BaseStoreFactory;
 
-public class JdbcStoreFactory implements StoreFactory {
+public class JdbcStoreFactory extends BaseStoreFactory {
 
     private boolean transactional;
     private boolean clustered;
@@ -77,6 +78,9 @@ public class JdbcStoreFactory implements StoreFactory {
         JdbcStore store = stores.get(name);
         if (store == null) {
             store = new JdbcStore(this, name);
+            for(StoreListener listener:storeListeners) {
+                store.addListener(listener);
+            }
             stores.put(name, store);
         }
         return store;

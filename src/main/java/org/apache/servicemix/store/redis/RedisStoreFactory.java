@@ -18,17 +18,15 @@ package org.apache.servicemix.store.redis;
 
 
 import org.apache.servicemix.store.Store;
-import org.apache.servicemix.store.StoreFactory;
+import org.apache.servicemix.store.StoreListener;
+import org.apache.servicemix.store.base.BaseStoreFactory;
 import org.idevlab.rjc.RedisNode;
-import org.idevlab.rjc.SingleRedisOperations;
-import org.idevlab.rjc.ds.DataSource;
-import org.idevlab.rjc.ds.SimpleDataSource;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RedisStoreFactory implements StoreFactory {
+public class RedisStoreFactory extends BaseStoreFactory {
 
     private Map<String, RedisStore> stores = new HashMap<String, RedisStore>();
 
@@ -49,6 +47,10 @@ public class RedisStoreFactory implements StoreFactory {
                 store = new RedisStore(redisNode, storeName);
             } else {
                 store = new RedisStore(redisNode, storeName, timeout);
+            }
+
+            for(StoreListener listener:storeListeners) {
+                store.addListener(listener);
             }
             stores.put(name, store);
         }

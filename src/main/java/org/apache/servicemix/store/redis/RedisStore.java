@@ -17,8 +17,8 @@
 package org.apache.servicemix.store.redis;
 
 
+import org.apache.servicemix.store.base.BaseStore;
 import org.apache.servicemix.store.Entry;
-import org.apache.servicemix.store.Store;
 import org.idevlab.rjc.RedisNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,7 @@ import sun.misc.BASE64Encoder;
 
 import java.io.*;
 
-public class RedisStore implements Store {
+public class RedisStore extends BaseStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(RedisStore.class);
 
@@ -84,14 +84,20 @@ public class RedisStore implements Store {
      */
     public void store(String id, Object data) throws IOException {
         LOG.debug("Storing object with id: " + id);
+        ObjectOutputStream out = null;
         try {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            ObjectOutputStream out = new ObjectOutputStream(buffer);
+            out = new ObjectOutputStream(buffer);
             out.writeObject(new Entry(data));
             out.close();
             redisNode.set(id, encoder.encode(buffer.toByteArray()));
+            fireAddedEvent(id,data);
         } catch (Exception e) {
             throw (IOException) new IOException("Error storing object").initCause(e);
+        } finally {
+            if(out != null) {
+                out.close();
+            }
         }
     }
 
@@ -121,16 +127,28 @@ public class RedisStore implements Store {
      */
     public Object load(String id) throws IOException {
         LOG.debug("Loading/Removing object with id: " + id);
-        Object result = null;
-        if (timeout > 0) {
-            evict();
+        Entry result = removeEntry(id);
+        if(result != null) {
+            fireRemovedEvent(id,result.getData());
         }
-        try {
-            result = parseEntry(redisNode.get(id));
-        } catch (ClassNotFoundException e) {
-            throw new IOException("Could not load object from store", e);
+        return result;
+    }
+
+    /**
+     * <p>
+     * Loads an object that has been previously stored under the specified key.
+     * The object is removed from the store.
+     * </p>
+     * @param id the id of the object
+     * @return the object, or <code>null></code> if the object could not be found
+     * @throws IOException if an error occurs
+     */
+    public Object evict(String id) throws IOException {
+        LOG.debug("Evicting object with id: " + id);
+        Entry result = removeEntry(id);
+        if(result != null) {
+            fireEvictedEvent(id, result.getData());
         }
-        redisNode.del(id);
         return result;
     }
 
@@ -151,6 +169,26 @@ public class RedisStore implements Store {
         } catch (ClassNotFoundException e) {
             throw new IOException("Could not load object from store", e);
         }
+        return result;
+    }
+
+    /**
+     * Removes an object with the specified id.
+     * @param id
+     * @return
+     * @throws IOException
+     */
+    private Entry removeEntry(String id) throws IOException {
+        Entry result = null;
+        if (timeout > 0) {
+            evict();
+        }
+        try {
+            result = parseEntry(redisNode.get(id));
+        } catch (ClassNotFoundException e) {
+            throw new IOException("Could not load object from store", e);
+        }
+        redisNode.del(id);
         return result;
     }
 
@@ -183,7 +221,7 @@ public class RedisStore implements Store {
             }
             if (age > timeout) {
                 LOG.debug("Removing object with id " + key + " from store after " + age + " ms");
-                load(key);
+                evict(key);
             }
         }
     }

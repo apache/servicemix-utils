@@ -25,13 +25,14 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.apache.servicemix.store.Store;
-import org.apache.servicemix.store.StoreFactory;
+import org.apache.servicemix.store.StoreListener;
+import org.apache.servicemix.store.base.BaseStoreFactory;
 
 
 /**
  * @author iocanel
  */
-public class HazelcastStoreFactory implements StoreFactory {
+public class HazelcastStoreFactory extends BaseStoreFactory {
 
     private Map<String, HazelcastStore> stores;
 
@@ -53,6 +54,10 @@ public class HazelcastStoreFactory implements StoreFactory {
                 store = new HazelcastStore(hazelcastInstance, storeName);
             } else {
                 store = new HazelcastStore(hazelcastInstance, storeName, timeout);
+            }
+
+            for(StoreListener listener:storeListeners) {
+                store.addListener(listener);
             }
             stores.put(name, store);
         }

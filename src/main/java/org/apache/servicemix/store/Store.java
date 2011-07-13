@@ -17,6 +17,8 @@
 package org.apache.servicemix.store;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A Store is an interface representing a storage where objects can be
@@ -28,7 +30,7 @@ import java.io.IOException;
  *  
  * @author gnodet
  */
-public interface Store {
+public interface Store  {
 
     String PERSISTENT = "Persistent";
     
@@ -83,5 +85,25 @@ public interface Store {
      * @throws IOException if an error occurs
      */
     Object peek(String id) throws IOException;
-    
+
+
+
+    /***
+     * Registers a {@link StoreListener}.
+     * @param listener
+     */
+    void addListener(StoreListener listener);
+
+
+    /***
+     * Unregisters a {@link StoreListener}.
+     * @param listener
+     */
+    void removeListener(StoreListener listener);
+
+    /***
+     * Lists all {@link StoreListener}s.
+     */
+    public Set<StoreListener> getStoreListeners();
+
 }

@@ -23,11 +23,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Connection;
 
-import org.apache.servicemix.store.Store;
+import org.apache.servicemix.store.base.BaseStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JdbcStore implements Store {
+public class JdbcStore extends BaseStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(JdbcStore.class);
 
@@ -55,6 +55,7 @@ public class JdbcStore implements Store {
             out.close();
             connection = factory.getDataSource().getConnection();
             factory.getAdapter().doStoreData(connection, name + ":" + id, buffer.toByteArray());
+            fireAddedEvent(id,data);
         } catch (Exception e) {
             throw (IOException) new IOException("Error storing object").initCause(e);
         } finally {
@@ -79,6 +80,7 @@ public class JdbcStore implements Store {
                 ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
                 result = ois.readObject();
                 factory.getAdapter().doRemoveData(connection, name + ":" + id);
+                fireRemovedEvent(id, data);
             }
             return result;
         } catch (Exception e) {

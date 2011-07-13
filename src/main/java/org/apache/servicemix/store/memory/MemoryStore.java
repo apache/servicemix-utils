@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.servicemix.id.IdGenerator;
-import org.apache.servicemix.store.Store;
+import org.apache.servicemix.store.base.BaseStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author gnodet
  */
-public class MemoryStore implements Store {
+public class MemoryStore extends BaseStore {
 
     private static final Logger LOG = LoggerFactory.getLogger(MemoryStore.class);
 
@@ -50,6 +50,7 @@ public class MemoryStore implements Store {
     public void store(String id, Object data) throws IOException {
         LOG.debug("Storing object with id: " + id);
         datas.put(id, data);
+        fireAddedEvent(id,data);
     }
 
     public String store(Object data) throws IOException {
@@ -60,7 +61,9 @@ public class MemoryStore implements Store {
 
     public Object load(String id) throws IOException {
         LOG.debug("Loading/Removing object with id: " + id);
-        return datas.remove(id);
+        Object data = datas.remove(id);
+        fireEvictedEvent(id,data);
+        return data;
     }
 
     public Object peek(String id) throws IOException {
