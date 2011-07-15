@@ -18,6 +18,8 @@ package org.apache.servicemix.executors.impl;
 
 import org.apache.servicemix.executors.Executor;
 import org.apache.servicemix.executors.ExecutorAwareRunnable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -30,6 +32,8 @@ import java.util.concurrent.TimeUnit;
  * @author <a href="mailto:gnodet [at] gmail.com">Guillaume Nodet</a>
  */
 public class ExecutorImpl implements Executor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorImpl.class);
 
     private final ThreadPoolExecutor threadPool;
 
@@ -46,11 +50,24 @@ public class ExecutorImpl implements Executor {
     public void execute(Runnable command) {
         if (config.isBypassIfSynchronous() && command instanceof ExecutorAwareRunnable) {
             if (((ExecutorAwareRunnable) command).shouldRunSynchronously()) {
-                command.run();
+                wrap(command).run();
                 return;
             }
         }
-        threadPool.execute(command);
+        threadPool.execute(wrap(command));
+    }
+
+    private Runnable wrap(final Runnable wrapped) {
+        return new Runnable() {
+            public void run() {
+                try {
+                    wrapped.run();
+                } catch (Throwable t) {
+                    LOGGER.error("Exception caught while executing submitted job", t);
+                    throw new RuntimeException("Exception caught while executing in submitted job", t);
+                }
+            }
+        };
     }
 
     public void shutdown() {
