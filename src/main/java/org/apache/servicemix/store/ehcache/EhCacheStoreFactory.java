@@ -32,12 +32,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.servicemix.id.IdGenerator;
 import org.apache.servicemix.store.Store;
-import org.apache.servicemix.store.StoreFactory;
+import org.apache.servicemix.store.base.BaseStoreFactory;
 
 /**
  * @author n.dimos
  */
-public class EhCacheStoreFactory implements StoreFactory {
+public class EhCacheStoreFactory extends BaseStoreFactory{
 
     private static final Log LOG = LogFactory.getLog(EhCacheStoreFactory.class);
 
@@ -89,5 +89,13 @@ public class EhCacheStoreFactory implements StoreFactory {
 
     public void setCacheManager(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
+    }
+    
+    public CacheManagerFactory getCacheManagerFactory() {
+        return cacheManagerFactory;
+    }
+
+    public void setCacheManagerFactory(CacheManagerFactory cacheManagerFactory) {
+        this.cacheManagerFactory = cacheManagerFactory;
     }
 }
