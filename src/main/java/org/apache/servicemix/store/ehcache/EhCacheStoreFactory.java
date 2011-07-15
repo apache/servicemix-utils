@@ -32,6 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.servicemix.id.IdGenerator;
 import org.apache.servicemix.store.Store;
+import org.apache.servicemix.store.StoreListener;
 import org.apache.servicemix.store.base.BaseStoreFactory;
 
 /**
@@ -45,7 +46,7 @@ public class EhCacheStoreFactory extends BaseStoreFactory{
     private Map<String, EhCacheStore> stores = new HashMap<String, EhCacheStore>();
 
     private CacheManagerFactory cacheManagerFactory = new CacheManagerFactory();
-    private CacheManager cacheManager = cacheManagerFactory.build();
+    private CacheManager cacheManager;
 
     public EhCacheStoreFactory() {
 
@@ -54,12 +55,21 @@ public class EhCacheStoreFactory extends BaseStoreFactory{
     public synchronized Store open(String name) throws IOException {
         EhCacheStore store = stores.get(name);
         if (store == null) {
+
+            if(cacheManager == null) {
+                cacheManager = cacheManagerFactory.build();
+            }
+
             Cache cache = cacheManager.getCache(name);
             if(cache == null) {
                 cacheManager.addCache(name);
                 cache = cacheManager.getCache(name);
             }
             store = new EhCacheStore(cache,idGenerator, name);
+
+            for(StoreListener listener:storeListeners) {
+                store.addListener(listener);
+            }
             stores.put(name, store);
         }
         return store;
