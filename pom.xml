@@ -151,6 +151,11 @@
             <version>1.9.3</version>
         </dependency>
         <dependency>
+            <groupId>com.sna-projects.krati</groupId>
+            <artifactId>krati</artifactId>
+            <version>0.4.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.idevlab</groupId>
             <artifactId>rjc</artifactId>
             <version>0.6.4</version>

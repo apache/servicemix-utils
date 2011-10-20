@@ -17,14 +17,18 @@
 
 package org.apache.servicemix.store.hazelcast;
 
-import com.hazelcast.config.Config;
-import org.apache.servicemix.store.Entry;
 import java.util.Map;
+
+import junit.framework.TestCase;
+
+import org.apache.servicemix.store.Entry;
+import org.apache.servicemix.store.Store;
+import org.apache.servicemix.store.krati.KratiPersistenceProvider;
+
+import com.hazelcast.config.Config;
+import com.hazelcast.config.MapStoreConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import junit.framework.TestCase;
-import org.apache.servicemix.store.Store;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -62,7 +66,6 @@ public class HazelcastStoreTest extends TestCase {
         factory.close(store);
     }
 
-
     public void testTimeout() throws Exception {
         String id = store.store("Any kind of data...");
         Object data = store.load(id);
@@ -75,7 +78,6 @@ public class HazelcastStoreTest extends TestCase {
         assertNull("Data should have been removed from store after timeout", store.load(id));
     }
 
-    
     public void testDistributesStoreAndLoad() throws Exception {        
         //Create a new Hazelcast instance
         HazelcastInstance instance = Hazelcast.newHazelcastInstance(config);
@@ -88,4 +90,39 @@ public class HazelcastStoreTest extends TestCase {
         assertNotNull(data);
         assertEquals(data, result);        
     }
+    
+    public void testInstanceWithPersistenceProvider() throws Exception {
+
+		// Create a new HazelCast Instance configured to have persistence
+		// provider
+		Config config = new Config();
+		config.getGroupConfig().setName("testgroup-peristence");
+		config.getGroupConfig().setPassword("testpwd");
+		MapStoreConfig mapConfig = new MapStoreConfig();
+		mapConfig.setEnabled(true);
+		mapConfig.setWriteDelaySeconds(0);
+		//Instantiate the implementation provider
+		KratiPersistenceProvider provider = new KratiPersistenceProvider("target/krati");
+
+		mapConfig.setImplementation(provider);
+		config.getMapConfig(
+				HazelcastStoreFactory.STORE_PREFIX + ".test.persistence").setMapStoreConfig(mapConfig);
+		HazelcastInstance instance = Hazelcast.newHazelcastInstance(config);
+
+		String id = "testId";
+		String data = "testData";
+		Map map = instance.getMap(HazelcastStoreFactory.STORE_PREFIX + ".test.persistence");
+		map.put(id, data);
+
+		Object retObj = provider.load(id);
+		assertEquals(data, retObj);
+
+		map.remove(id);
+		assertNull(provider.load(id));
+		
+		provider.destroy();
+
+	}
+    
+    
 }
