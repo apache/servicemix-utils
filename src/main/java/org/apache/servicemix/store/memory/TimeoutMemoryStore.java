@@ -17,6 +17,7 @@
 package org.apache.servicemix.store.memory;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -59,24 +60,26 @@ public class TimeoutMemoryStore extends MemoryStore {
         evict();
         LOG.debug("Loading object with id:" + id);
         Entry entry = datas.remove(id);
-        if(entry != null) {
+        if (entry != null) {
             Object data = entry.getData();
             fireRemovedEvent(id,data);
             return data;
         } else return null;
     }
 
+    /*
+     * Remove timed out entries from the data map.
+     */
     private void evict() {
         long now = System.currentTimeMillis();
-        for (String key : datas.keySet()) {
-            long age = now - datas.get(key).getTime();
+
+        for (Map.Entry<String, Entry> entry : datas.entrySet()) {
+            long age = now - entry.getValue().getTime();
             if (age > timeout) {
-                LOG.debug("Removing object with id " + key + " from store after " + age + " ms");
-                Entry entry = datas.get(key);
-                if(entry != null) {
-                    fireEvictedEvent(key,entry.getData());
+                LOG.debug("Removing object with id " + entry.getKey() + " from store after " + age + " ms");
+                if(datas.remove(entry.getKey()) != null) {
+                    fireEvictedEvent(entry.getKey(), entry.getValue().getData());
                 }
-                datas.remove(key);
             }
         }
     }
