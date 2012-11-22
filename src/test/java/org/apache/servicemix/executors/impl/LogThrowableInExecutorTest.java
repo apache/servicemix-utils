@@ -22,11 +22,10 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.servicemix.executors.Executor;
 import org.apache.servicemix.executors.ExecutorFactory;
-import org.apache.servicemix.executors.impl.ExecutorFactoryImpl;
-import org.apache.servicemix.executors.impl.ExecutorImpl;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Test case to ensure that Executor will always log throwables from the executed Runnable (SM-1847)
@@ -36,13 +35,13 @@ public class LogThrowableInExecutorTest extends TestCase {
     private static final String MESSAGE = "I'm a bad Runnable throwing errors at people";
 
     public void testThrowableLogged() throws InterruptedException {
-        final List<LoggingEvent> events = new LinkedList<LoggingEvent>();
+        final BlockingQueue<LoggingEvent> events = new LinkedBlockingDeque<LoggingEvent>();
 
         // unit tests use LOG4J as the backend for SLF4J so add the appender to LOG4J
         Logger.getLogger(ExecutorImpl.class).addAppender(new AppenderSkeleton() {
             @Override
             protected void append(LoggingEvent event) {
-                events.add(event);
+                events.offer(event);
             }
 
             @Override
@@ -64,12 +63,12 @@ public class LogThrowableInExecutorTest extends TestCase {
             }
         });
 
-        // let's wait to make sure the runnable is done
-        Thread.sleep(500);
+        LoggingEvent event = events.poll(10, TimeUnit.SECONDS);
 
-        assertEquals("Should have logged 1 message", 1, events.size());
+
+        assertNotNull("Should have logged a message", event);
         assertTrue("Exception message should have been logged",
-                events.get(0).getThrowableStrRep()[0].contains(MESSAGE));
+                   event.getThrowableStrRep()[0].contains(MESSAGE));
 
     }
 
