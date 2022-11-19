@@ -29,6 +29,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -174,7 +175,7 @@ public final class FileUtil {
         }
         InputStream in = new BufferedInputStream(url.openStream());
         // make sure we get the actual file
-        File zip = File.createTempFile("arc", ".zip", targetDir);
+        File zip = Files.createTempFile(targetDir.toPath(), "arc", ".zip").toFile();
         OutputStream out = new BufferedOutputStream(new FileOutputStream(zip));
         copyInputStream(in, out);
         out.close();
